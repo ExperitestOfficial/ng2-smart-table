@@ -1,8 +1,9 @@
 {
-  "name": "ng2-smart-table",
-  "version": "1.7.2",
+  "name": "@experitestofficial/ng2-smart-table",
+  "version": "1.7.3",
   "scripts": {
     "ng": "ng",
+    "pack": "ng build && cd ./dist/ng2-smart-table && npm pack",
     "start": "ng serve",
     "build:demo": "ng build demo --aot --prod",
     "build:lib": "ng build ng2-smart-table --prod",
@@ -15,7 +16,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/cdk": "^10.2.0",
     "@angular/material": "^10.2.6",
