@@ -15,6 +15,7 @@ import {LocalDataSource} from './lib/data-source/local/local.data-source';
 })
 export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
 
+
   @Input() source: any;
   @Input() settings: Object = {};
 

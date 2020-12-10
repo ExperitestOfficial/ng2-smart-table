@@ -17,4 +17,8 @@ export const routes: Routes = [
     path: 'examples',
     loadChildren: () => import('./examples/examples.module').then(m => m.ExamplesModule),
   },
+  {
+    path: 'multiple-items-demo',
+    loadChildren: () => import('./multiple-items-demo/multiple-items-demo.module').then(m => m.MultipleItemsDemoModule),
+  },
 ];
