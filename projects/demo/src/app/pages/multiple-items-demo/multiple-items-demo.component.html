@@ -1,7 +1,14 @@
 <header-component tagline="Multiple-Items-Demo"></header-component>
 
 
-<p>multiple-items-demo works!</p>
+<p>The container of the table is absolute. <b>See the css class "component-container".</b> <br/>
+
+  I think this the way we should work. Assign the container a fixed (LTRB) positions, and the table will stretch inside.
+  We can do another positions for responsive view.
+
+</p>
+
+<p></p>
 <div class = "component-container">
   <ng2-smart-table [settings]="tableSettings" [source]="tableData"></ng2-smart-table>
 

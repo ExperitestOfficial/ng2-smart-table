@@ -1,7 +1,15 @@
-.component-container{
-  width: 75%;
-  height: 75%;
+.component-container {
+
   border: solid 3px green;
   position: absolute;
- bottom: 30px;
+  //If we use fixed positions:
+  bottom: 30px;
+  top: 368px;
+  right: 106px;
+  left: 65px;
+
+  //We don't need the width and height
+  //width: 75%;
+  //height: 75%;
+
 }
