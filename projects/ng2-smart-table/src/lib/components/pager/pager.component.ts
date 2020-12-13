@@ -7,7 +7,7 @@ import { DataSource } from '../../lib/data-source/data-source';
   selector: 'ng2-smart-table-pager',
   styleUrls: ['./pager.component.scss'],
   template: `
-    <nav *ngIf="shouldShow()" class="ng2-smart-pagination-nav">
+    <nav *ngIf="shouldShow()" class="ng2-smart-pagination-nav" [ngClass]="styleClasses">
       <ul class="ng2-smart-pagination pagination">
         <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
           <a class="ng2-smart-page-link page-link" href="#"
@@ -39,7 +39,7 @@ import { DataSource } from '../../lib/data-source/data-source';
             <span class="sr-only">Next</span>
           </a>
         </li>
-        
+
         <li class="ng2-smart-page-item page-item"
         [ngClass]="{disabled: getPage() == getLast()}">
           <a class="ng2-smart-page-link page-link" href="#"
@@ -50,7 +50,7 @@ import { DataSource } from '../../lib/data-source/data-source';
         </li>
       </ul>
     </nav>
-    
+
     <nav *ngIf="perPageSelect && perPageSelect.length > 0" class="ng2-smart-pagination-per-page">
       <label for="per-page">
         Per Page:
@@ -74,6 +74,11 @@ export class PagerComponent implements OnChanges {
   protected page: number;
   protected count: number = 0;
   protected perPage: number;
+  @Input()
+  protected styleClasses="mingar-lingar";
+  @Input()
+  protected showPagesCount = 4;
+
 
   protected dataChangedSub: Subscription;
 
@@ -149,19 +154,18 @@ export class PagerComponent implements OnChanges {
 
   initPages() {
     const pagesCount = this.getLast();
-    let showPagesCount = 4;
-    showPagesCount = pagesCount < showPagesCount ? pagesCount : showPagesCount;
+    this.showPagesCount = pagesCount < this.showPagesCount ? pagesCount : this.showPagesCount;
     this.pages = [];
 
     if (this.shouldShow()) {
 
-      let middleOne = Math.ceil(showPagesCount / 2);
+      let middleOne = Math.ceil(this.showPagesCount / 2);
       middleOne = this.page >= middleOne ? this.page : middleOne;
 
-      let lastOne = middleOne + Math.floor(showPagesCount / 2);
+      let lastOne = middleOne + Math.floor(this.showPagesCount / 2);
       lastOne = lastOne >= pagesCount ? pagesCount : lastOne;
 
-      const firstOne = lastOne - showPagesCount + 1;
+      const firstOne = lastOne - this.showPagesCount + 1;
 
       for (let i = firstOne; i <= lastOne; i++) {
         this.pages.push(i);

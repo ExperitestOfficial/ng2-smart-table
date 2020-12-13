@@ -7,6 +7,7 @@ import { Column } from './data-set/column';
 import { Row } from './data-set/row';
 import { DataSet } from './data-set/data-set';
 import { DataSource } from './data-source/data-source';
+import {LocalDataSource} from 'ng2-smart-table';
 
 export class Grid {
 
@@ -255,7 +256,7 @@ export class Grid {
     return null;
   }
 
-  prepareSource(source: any): DataSource {
+  prepareSource(source: DataSource): DataSource {
     const initialSource: any = this.getInitialSort();
     if (initialSource && initialSource['field'] && initialSource['direction']) {
       source.setSort([initialSource], false);

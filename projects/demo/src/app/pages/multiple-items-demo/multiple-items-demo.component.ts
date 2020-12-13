@@ -26,7 +26,8 @@ export class MultipleItemsDemoComponent implements OnInit {
     noDataMessage: "",
     actions: false,
     attr: {class: 'items-table'},
-    pager: {display: false},
+    // pager: {display: false},
+       pager: {display: true, perPage: 10},//pagination
 
     columns: {
       name: {
