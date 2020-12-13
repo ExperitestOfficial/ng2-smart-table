@@ -7,7 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { routes } from './documentation.routes';
 
 import { DocumentationComponent } from './documentation.component';
-
+//Lingar comment
 @NgModule({
   imports: [
     CommonModule,
