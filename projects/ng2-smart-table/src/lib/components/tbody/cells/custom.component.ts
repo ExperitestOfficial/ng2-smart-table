@@ -8,6 +8,7 @@ import { Grid } from '../../../lib/grid';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
       <button *ngFor="let action of grid.getSetting('actions.custom')" href="#"
+              class="custom-button"
          [innerHTML]="action.title"
          (click)="onCustom(action, $event)"></button>
         `

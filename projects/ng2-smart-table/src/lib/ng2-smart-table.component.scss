@@ -10,13 +10,14 @@
         box-sizing: border-box;
       }
 
-      input, optgroup, select, textarea {
+      button, input, optgroup, select, textarea {
         color: inherit;
         font: inherit;
         margin: 0;
       }
 
-      button {
+      .action-button,
+      .custom-button {
         padding: 6px 12px;
         margin-bottom: 0;
         margin-right: 5px;
@@ -41,7 +42,10 @@
         color: #FFFFFF;
       }
 
-      button:hover, button:focus {
+      .action-button:hover,
+      .action-button:focus,
+      .custom-button:hover,
+      .custom-button:focus{
         color: #fff;
         background-color: #ec971f;
         border-color: #d58512;

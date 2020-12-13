@@ -7,7 +7,7 @@ import {Row} from '../../../lib/data-set/row';
   selector: 'ng2-st-tbody-create-cancel',
   template: `
     <div class="line-block">
-      <button [innerHTML]="saveButtonContent" (click)="onSave($event)"></button>
+      <button [innerHTML]="saveButtonContent" class="action-button" (click)="onSave($event)"></button>
       <button [innerHTML]="cancelButtonContent" class="cancel-button" (click)="onCancelEdit($event)"></button>
     </div>
   `,

@@ -9,8 +9,8 @@ import {DataSource} from '../../../lib/data-source/data-source';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="line-block">
-      <button *ngIf="isActionEdit" [innerHTML]="editRowButtonContent" (click)="onEdit($event)"></button>
-      <button *ngIf="isActionDelete" [innerHTML]="deleteRowButtonContent" (click)="onDelete($event)"></button>
+      <button *ngIf="isActionEdit" [innerHTML]="editRowButtonContent" class="action-button" (click)="onEdit($event)"></button>
+      <button *ngIf="isActionDelete" [innerHTML]="deleteRowButtonContent" class="action-button" (click)="onDelete($event)"></button>
     </div>
   `
 })
