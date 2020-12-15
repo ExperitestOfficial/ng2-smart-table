@@ -271,7 +271,9 @@ export class Grid {
       }
       console.log("lingar - ", pagingConf);
 
-      source.setPaging(this.getPageToSelect(source), this.getSetting('pager.perPage'), false);
+      // source.setPaging(this.getPageToSelect(source), this.getSetting('pager.perPage'), false);
+      source.setPaging(this.getPageToSelect(source), pagingConf, false);
+
     }
 
     source.refresh();
