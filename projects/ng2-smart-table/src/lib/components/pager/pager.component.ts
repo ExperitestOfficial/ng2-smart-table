@@ -89,7 +89,7 @@ export class PagerComponent implements OnChanges {
       }
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
         this.page = this.source.getPaging().page;
-        this.perPage = this.source.getPaging().perPage;
+        this.perPage = this.source.getPaging().perPage;//lingar todo - here add also the new props.
         this.currentPerPage = this.perPage;
         this.count = this.source.count();
         if (this.isPageOutOfBounce()) {

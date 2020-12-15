@@ -186,7 +186,8 @@ export class LocalDataSource extends DataSource {
     return this;
   }
 
-  setPaging(page: number, perPage: number, doEmit: boolean = true): LocalDataSource {
+  setPaging(page: number, perPage: number, doEmit: boolean = true): LocalDataSource {//TODO lingar here is the change
+    //convert this to get confObj - page, perPage, howMuchToshow, styleClasses
     this.pagingConf['page'] = page;
     this.pagingConf['perPage'] = perPage;
 
@@ -208,7 +209,7 @@ export class LocalDataSource extends DataSource {
     return this.filterConf;
   }
 
-  getPaging(): any {
+  getPaging(): any {//lingar - this too
     return this.pagingConf;
   }
 
