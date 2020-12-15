@@ -266,6 +266,7 @@ export class Grid {
       console.log("lingar - ", this.getSetting('pager.perPage'));
       pagingConf = {
         page: 1,
+        display: true,
         perPage: this.getSetting('pager.perPage'),
         showPagesCount: this.getSetting('pager.showPagesCount'),
         styleClasses: this.getSetting('pager.styleClasses')
