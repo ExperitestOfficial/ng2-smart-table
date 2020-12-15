@@ -263,7 +263,6 @@ export class Grid {
       source.setSort([initialSource], false);
     }
     if (this.getSetting('pager.display') === true) {
-      console.log("lingar - ", this.getSetting('pager.perPage'));
       pagingConf = {
         page: 1,
         display: true,
@@ -271,9 +270,6 @@ export class Grid {
         showPagesCount: this.getSetting('pager.showPagesCount'),
         styleClasses: this.getSetting('pager.styleClasses')
       }
-      console.log("lingar - ", pagingConf);
-
-      // source.setPaging(this.getPageToSelect(source), this.getSetting('pager.perPage'), false);
       source.setPaging(this.getPageToSelect(source), pagingConf, false);
 
     }

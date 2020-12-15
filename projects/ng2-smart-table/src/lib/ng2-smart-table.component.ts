@@ -40,7 +40,8 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
   rowClassFunction: Function;
 
   grid: Grid;
-  defaultSettings: Object = {//lingar - todo - here is the default settings
+  //those are the default setting of the table setting.
+  defaultSettings: Object = {
     mode: 'inline', // inline|external|click-to-edit
     selectMode: 'single', // single|multi
     /**
@@ -122,7 +123,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
     this.isHideHeader = this.grid.getSetting('hideHeader');
     this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
     this.isPagerDisplay = this.grid.getSetting('pager.display');
-    this.isPagerDisplay = this.grid.getSetting('pager.display');//todo - remove unnecessary row lingar
     this.perPageSelect = this.grid.getSetting('pager.perPageSelect');
     this.rowClassFunction = this.grid.getSetting('rowClassFunction');
   }

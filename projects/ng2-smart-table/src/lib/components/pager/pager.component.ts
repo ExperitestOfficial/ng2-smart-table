@@ -75,7 +75,7 @@ export class PagerComponent implements OnChanges {
   protected count: number = 0;
   protected perPage: number;
   protected showPagesCount = 4;
-  protected styleClasses="mingar-lingar";
+  protected styleClasses="";
 
 
 
@@ -87,12 +87,9 @@ export class PagerComponent implements OnChanges {
         this.dataChangedSub.unsubscribe();
       }
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-        console.log("lingar - getPaging ", this.source.getPaging());
         this.page = this.source.getPaging().page;
-        //lingar todo - here add also the new props.
         this.perPage = this.source.getPaging().perPage;
         this.showPagesCount = this.source.getPaging().showPagesCount;
-
         this.styleClasses = this.source.getPaging().styleClasses;
 
 
