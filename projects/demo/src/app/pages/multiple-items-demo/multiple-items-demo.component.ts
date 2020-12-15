@@ -29,7 +29,7 @@ export class MultipleItemsDemoComponent implements OnInit {
     // pager: {display: false},
     //    pager: {display: true},//pagination
     // pager: {display: true},//pagination
-    pager: {display: true, showPagesCount: 10, styleClasses: "singar"},//pagination with some properties
+    pager: {display: true, showPagesCount: 6, styleClasses: "singar"},//pagination with some properties
 
 
     columns: {

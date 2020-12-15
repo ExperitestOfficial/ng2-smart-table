@@ -13,3 +13,14 @@
   //height: 75%;
 
 }
+.pager-style{
+  .ng2-smart-pagination{
+    display: block;
+  }
+  li{
+    background: brown;
+    margin: 2px;
+    border: 5px solid yellow;
+    color: white;
+  }
+}
