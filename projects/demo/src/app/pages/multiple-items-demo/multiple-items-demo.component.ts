@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {LocalDataSource} from 'ng2-smart-table';
 import {St2CellDataComponent} from './st2-cell-data.component.';
 
@@ -8,7 +8,8 @@ import {St2CellDataComponent} from './st2-cell-data.component.';
 @Component({
   selector: 'app-multiple-items-demo',
   templateUrl: './multiple-items-demo.component.html',
-  styleUrls: ['./multiple-items-demo.component.scss']
+  styleUrls: ['./multiple-items-demo.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MultipleItemsDemoComponent implements OnInit {
   multipleItems = [];
@@ -29,7 +30,7 @@ export class MultipleItemsDemoComponent implements OnInit {
     // pager: {display: false},
     //    pager: {display: true},//pagination
     // pager: {display: true},//pagination
-    pager: {display: true, showPagesCount: 6, styleClasses: "pager-style"},//pagination with some properties
+    pager: {display: true, showPagesCount: 6, styleClasses: "pager-style2"},//pagination with some properties
 
 
     columns: {
