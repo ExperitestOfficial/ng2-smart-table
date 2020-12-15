@@ -88,8 +88,11 @@ export class PagerComponent implements OnChanges {
         this.dataChangedSub.unsubscribe();
       }
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
+        console.log("lingar - getPaging ", this.source.getPaging());
         this.page = this.source.getPaging().page;
-        this.perPage = this.source.getPaging().perPage;//lingar todo - here add also the new props.
+        //lingar todo - here add also the new props.
+        this.perPage = this.source.getPaging().perPage;
+
         this.currentPerPage = this.perPage;
         this.count = this.source.count();
         if (this.isPageOutOfBounce()) {
