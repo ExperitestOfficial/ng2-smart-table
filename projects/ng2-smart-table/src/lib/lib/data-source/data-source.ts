@@ -1,5 +1,5 @@
-import { Subject } from 'rxjs';
-import { Observable } from 'rxjs';
+import {Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 
 export abstract class DataSource {
 
@@ -9,10 +9,15 @@ export abstract class DataSource {
   protected onRemovedSource = new Subject<any>();
 
   abstract getAll(): Promise<any>;
+
   abstract getElements(): Promise<any>;
+
   abstract getSort(): any;
+
   abstract getFilter(): any;
+
   abstract getPaging(): any;
+
   abstract count(): number;
 
   refresh() {
@@ -93,7 +98,14 @@ export abstract class DataSource {
     }
   }
 
-  setPaging(page: number, perPage: number, doEmit?: boolean) {
+  setPaging(page: number, pagingConf: {}, doEmit?: boolean) {
+    //todo it work with conf object
+    if (doEmit) {
+      this.emitOnChanged('paging');
+    }
+  }
+
+  setPagingOld(page: number, perPage: number, doEmit?: boolean) {
     //todo it work with conf object
     if (doEmit) {
       this.emitOnChanged('paging');

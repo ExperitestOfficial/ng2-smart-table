@@ -40,7 +40,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
   rowClassFunction: Function;
 
   grid: Grid;
-  defaultSettings: Object = {
+  defaultSettings: Object = {//lingar - todo - here is the default settings
     mode: 'inline', // inline|external|click-to-edit
     selectMode: 'single', // single|multi
     /**
@@ -91,6 +91,10 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
       display: true,
       page: 1,
       perPage: 10,
+      showPagesCount: 4,
+      styleClasses: ""
+
+
     },
     rowClassFunction: () => '',
   };

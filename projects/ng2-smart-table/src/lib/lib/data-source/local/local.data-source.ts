@@ -191,7 +191,9 @@ export class LocalDataSource extends DataSource {
     // this.pagingConf['page'] = page;
     // this.pagingConf['perPage'] = perPage;
     this.pagingConf = pagingConf;
-    super.setPaging(page, perPage, doEmit);
+    // super.setPaging(page, perPage, doEmit);
+    super.setPaging(page, pagingConf, doEmit);
+
     return this;
   }
   setPagingOld(page: number, perPage: number, doEmit: boolean = true): LocalDataSource {//TODO lingar here is the change
