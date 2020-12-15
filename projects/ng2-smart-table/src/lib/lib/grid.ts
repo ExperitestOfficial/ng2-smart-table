@@ -265,6 +265,7 @@ export class Grid {
     if (this.getSetting('pager.display') === true) {
       console.log("lingar - ", this.getSetting('pager.perPage'));
       pagingConf = {
+        page: 1,
         perPage: this.getSetting('pager.perPage'),
         showPagesCount: this.getSetting('pager.showPagesCount'),
         styleClasses: this.getSetting('pager.styleClasses')
