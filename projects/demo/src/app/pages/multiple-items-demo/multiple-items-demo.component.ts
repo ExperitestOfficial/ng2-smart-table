@@ -28,7 +28,9 @@ export class MultipleItemsDemoComponent implements OnInit {
     attr: {class: 'items-table'},
     // pager: {display: false},
     //    pager: {display: true},//pagination
-    pager: {display: true},//pagination
+    // pager: {display: true},//pagination
+    pager: {display: true, showPagesCount: 10, styleClasses: "singar"},//pagination with some properties
+
 
     columns: {
       name: {
