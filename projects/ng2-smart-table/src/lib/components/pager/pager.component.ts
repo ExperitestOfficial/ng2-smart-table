@@ -12,7 +12,7 @@ import { DataSource } from '../../lib/data-source/data-source';
         <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
           <a class="ng2-smart-page-link page-link" href="#"
           (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
-            <span aria-hidden="true">&laquo;</span>
+            <span aria-hidden="true">&lt;&lt;</span>
             <span class="sr-only">First</span>
           </a>
         </li>
@@ -44,7 +44,7 @@ import { DataSource } from '../../lib/data-source/data-source';
         [ngClass]="{disabled: getPage() == getLast()}">
           <a class="ng2-smart-page-link page-link" href="#"
           (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
-            <span aria-hidden="true">&raquo;</span>
+            <span aria-hidden="true">&gt;&gt;</span>
             <span class="sr-only">Last</span>
           </a>
         </li>

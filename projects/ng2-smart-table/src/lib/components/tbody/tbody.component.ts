@@ -1,8 +1,8 @@
 import {Component, Input, Output, EventEmitter, OnChanges,} from '@angular/core';
 
-import { Grid } from '../../lib/grid';
-import { DataSource } from '../../lib/data-source/data-source';
-import { Cell } from '../../lib/data-set/cell';
+import {Grid} from '../../lib/grid';
+import {DataSource} from '../../lib/data-source/data-source';
+import {Cell} from '../../lib/data-set/cell';
 import {Row} from '../../lib/data-set/row';
 
 @Component({
@@ -17,6 +17,7 @@ export class Ng2SmartTableTbodyComponent implements OnChanges {
   @Input() deleteConfirm: EventEmitter<any>;
   @Input() editConfirm: EventEmitter<any>;
   @Input() rowClassFunction: Function;
+  @Input() isVirtualScrolling: boolean;
 
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<any>();
