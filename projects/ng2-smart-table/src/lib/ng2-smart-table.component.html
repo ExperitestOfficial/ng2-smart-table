@@ -3,7 +3,7 @@
     *ngIf="!isPagerDisplay; then infiniteScrollTable; else paginationTable">
   </ng-container>
   <ng-template #infiniteScrollTable>
-    <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport234"
+    <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport"
                                  style="height: 100%; width: auto"
     >
 
@@ -39,17 +39,12 @@
 
       </table>
 
-      <ng2-smart-table-pager *ngIf="isPagerDisplay"
-                             [source]="source"
-                             [perPageSelect]="perPageSelect"
-                             (changePage)="changePage($event)">
-      </ng2-smart-table-pager>
     </cdk-virtual-scroll-viewport>
 
   </ng-template>
 
   <ng-template #paginationTable>
-    <div class ="pagination-table">
+    <div class="pagination-table">
 
       <table [id]="tableId" [ngClass]="tableClass">
 

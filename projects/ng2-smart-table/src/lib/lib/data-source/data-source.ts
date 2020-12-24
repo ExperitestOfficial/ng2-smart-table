@@ -99,14 +99,6 @@ export abstract class DataSource {
   }
 
   setPaging(page: number, pagingConf: {}, doEmit?: boolean) {
-    //todo it work with conf object
-    if (doEmit) {
-      this.emitOnChanged('paging');
-    }
-  }
-
-  setPagingOld(page: number, perPage: number, doEmit?: boolean) {
-    //todo it work with conf object
     if (doEmit) {
       this.emitOnChanged('paging');
     }

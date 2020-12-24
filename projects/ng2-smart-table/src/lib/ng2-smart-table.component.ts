@@ -94,7 +94,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
       page: 1,
       perPage: 10,
       showPagesCount: 4,
-      styleClasses: ""
+      styleClasses: ''
 
 
     },
@@ -108,10 +108,10 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
   private destroyed$: Subject<void> = new Subject<void>();
 
   ngOnInit() {
-    if(this.debug){
+    if (this.debug) {
       //We can add here needed data like version (from package.json) or some other needed things. But it can produce problems in compiling.
       //TODO - add version from package.json
-      console.log("Smart-table ng2 (26.222)" );
+      console.log('Smart-table ng2');
     }
   }
 
