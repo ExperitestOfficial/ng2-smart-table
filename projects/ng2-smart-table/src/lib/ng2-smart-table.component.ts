@@ -7,7 +7,6 @@ import {DataSource} from './lib/data-source/data-source';
 import {Row} from './lib/data-set/row';
 import {deepExtend, getPageForRowIndex} from './lib/helpers';
 import {LocalDataSource} from './lib/data-source/local/local.data-source';
-import { version } from './../../package.json';
 
 @Component({
   selector: 'ng2-smart-table',
@@ -110,7 +109,9 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     if(this.debug){
-      console.log("Smart-table ng2 version - " + version);
+      //We can add here needed data like version (from package.json) or some other needed things. But it can produce problems in compiling.
+      //TODO - add version from package.json
+      console.log("Smart-table ng2 (26.222)" );
     }
   }
 

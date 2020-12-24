@@ -75,7 +75,7 @@ export class PagerComponent implements OnChanges {
   protected count: number = 0;
   protected perPage: number;
   protected showPagesCount = 4;
-  protected styleClasses="";
+  styleClasses="";
 
 
 
