@@ -110,8 +110,8 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     if (this.debug) {
       //We can add here needed data like version (from package.json) or some other needed things. But it can produce problems in compiling.
-      //TODO - add version from package.json
-      console.log('Smart-table ng2');
+      //TODO - add version from lib.package.json
+      console.log('NG2-SmartTable');
     }
   }
 
