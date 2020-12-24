@@ -7,7 +7,7 @@ import {DataSource} from './lib/data-source/data-source';
 import {Row} from './lib/data-set/row';
 import {deepExtend, getPageForRowIndex} from './lib/helpers';
 import {LocalDataSource} from './lib/data-source/local/local.data-source';
-import { version } from '../../package.json';
+import { version } from './../../package.json';
 
 @Component({
   selector: 'ng2-smart-table',
