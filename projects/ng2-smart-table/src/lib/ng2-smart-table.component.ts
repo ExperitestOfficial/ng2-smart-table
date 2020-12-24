@@ -1,4 +1,4 @@
-import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnDestroy} from '@angular/core';
+import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -7,17 +7,19 @@ import {DataSource} from './lib/data-source/data-source';
 import {Row} from './lib/data-set/row';
 import {deepExtend, getPageForRowIndex} from './lib/helpers';
 import {LocalDataSource} from './lib/data-source/local/local.data-source';
+import { version } from '../../package.json';
 
 @Component({
   selector: 'ng2-smart-table',
   styleUrls: ['./ng2-smart-table.component.scss'],
   templateUrl: './ng2-smart-table.component.html',
 })
-export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
+export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
 
 
   @Input() source: any;
   @Input() settings: Object = {};
+  @Input() debug = false;
 
   @Output() rowSelect = new EventEmitter<any>();
   @Output() rowDeselect = new EventEmitter<any>();
@@ -105,6 +107,12 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
   private onSelectRowSubscription: Subscription;
   private onDeselectRowSubscription: Subscription;
   private destroyed$: Subject<void> = new Subject<void>();
+
+  ngOnInit() {
+    if(this.debug){
+      console.log("Smart-table ng2 version - " + version);
+    }
+  }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (this.grid) {
