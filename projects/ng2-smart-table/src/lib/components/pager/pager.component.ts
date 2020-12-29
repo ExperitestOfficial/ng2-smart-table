@@ -7,12 +7,12 @@ import { DataSource } from '../../lib/data-source/data-source';
   selector: 'ng2-smart-table-pager',
   styleUrls: ['./pager.component.scss'],
   template: `
-    <nav *ngIf="shouldShow()" class="ng2-smart-pagination-nav">
+    <nav *ngIf="shouldShow()" class="ng2-smart-pagination-nav" [ngClass]="styleClasses">
       <ul class="ng2-smart-pagination pagination">
         <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
           <a class="ng2-smart-page-link page-link" href="#"
           (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
-            <span aria-hidden="true">&laquo;</span>
+            <span aria-hidden="true">&lt;&lt;</span>
             <span class="sr-only">First</span>
           </a>
         </li>
@@ -39,18 +39,18 @@ import { DataSource } from '../../lib/data-source/data-source';
             <span class="sr-only">Next</span>
           </a>
         </li>
-        
+
         <li class="ng2-smart-page-item page-item"
         [ngClass]="{disabled: getPage() == getLast()}">
           <a class="ng2-smart-page-link page-link" href="#"
           (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
-            <span aria-hidden="true">&raquo;</span>
+            <span aria-hidden="true">&gt;&gt;</span>
             <span class="sr-only">Last</span>
           </a>
         </li>
       </ul>
     </nav>
-    
+
     <nav *ngIf="perPageSelect && perPageSelect.length > 0" class="ng2-smart-pagination-per-page">
       <label for="per-page">
         Per Page:
@@ -74,6 +74,10 @@ export class PagerComponent implements OnChanges {
   protected page: number;
   protected count: number = 0;
   protected perPage: number;
+  protected showPagesCount = 4;
+  styleClasses="";
+
+
 
   protected dataChangedSub: Subscription;
 
@@ -85,6 +89,11 @@ export class PagerComponent implements OnChanges {
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
         this.page = this.source.getPaging().page;
         this.perPage = this.source.getPaging().perPage;
+        this.showPagesCount = this.source.getPaging().showPagesCount;
+        this.styleClasses = this.source.getPaging().styleClasses;
+
+
+
         this.currentPerPage = this.perPage;
         this.count = this.source.count();
         if (this.isPageOutOfBounce()) {
@@ -149,19 +158,18 @@ export class PagerComponent implements OnChanges {
 
   initPages() {
     const pagesCount = this.getLast();
-    let showPagesCount = 4;
-    showPagesCount = pagesCount < showPagesCount ? pagesCount : showPagesCount;
+    this.showPagesCount = pagesCount < this.showPagesCount ? pagesCount : this.showPagesCount;
     this.pages = [];
 
     if (this.shouldShow()) {
 
-      let middleOne = Math.ceil(showPagesCount / 2);
+      let middleOne = Math.ceil(this.showPagesCount / 2);
       middleOne = this.page >= middleOne ? this.page : middleOne;
 
-      let lastOne = middleOne + Math.floor(showPagesCount / 2);
+      let lastOne = middleOne + Math.floor(this.showPagesCount / 2);
       lastOne = lastOne >= pagesCount ? pagesCount : lastOne;
 
-      const firstOne = lastOne - showPagesCount + 1;
+      const firstOne = lastOne - this.showPagesCount + 1;
 
       for (let i = firstOne; i <= lastOne; i++) {
         this.pages.push(i);

@@ -1,4 +1,4 @@
-import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnDestroy} from '@angular/core';
+import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -13,11 +13,12 @@ import {LocalDataSource} from './lib/data-source/local/local.data-source';
   styleUrls: ['./ng2-smart-table.component.scss'],
   templateUrl: './ng2-smart-table.component.html',
 })
-export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
+export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
 
 
   @Input() source: any;
   @Input() settings: Object = {};
+  @Input() debug = false;
 
   @Output() rowSelect = new EventEmitter<any>();
   @Output() rowDeselect = new EventEmitter<any>();
@@ -40,6 +41,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
   rowClassFunction: Function;
 
   grid: Grid;
+  //those are the default setting of the table setting.
   defaultSettings: Object = {
     mode: 'inline', // inline|external|click-to-edit
     selectMode: 'single', // single|multi
@@ -91,6 +93,10 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
       display: true,
       page: 1,
       perPage: 10,
+      showPagesCount: 4,
+      styleClasses: ''
+
+
     },
     rowClassFunction: () => '',
   };
@@ -100,6 +106,14 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
   private onSelectRowSubscription: Subscription;
   private onDeselectRowSubscription: Subscription;
   private destroyed$: Subject<void> = new Subject<void>();
+
+  ngOnInit() {
+    if (this.debug) {
+      //We can add here needed data like version (from package.json) or some other needed things. But it can produce problems in compiling.
+      //TODO - add version from lib.package.json
+      console.log('NG2-SmartTable');
+    }
+  }
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (this.grid) {
@@ -117,7 +131,6 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
     this.tableClass = this.grid.getSetting('attr.class');
     this.isHideHeader = this.grid.getSetting('hideHeader');
     this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
-    this.isPagerDisplay = this.grid.getSetting('pager.display');
     this.isPagerDisplay = this.grid.getSetting('pager.display');
     this.perPageSelect = this.grid.getSetting('pager.perPageSelect');
     this.rowClassFunction = this.grid.getSetting('rowClassFunction');

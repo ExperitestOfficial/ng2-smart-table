@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {LocalDataSource} from 'ng2-smart-table';
 import {St2CellDataComponent} from './st2-cell-data.component.';
 
@@ -26,7 +26,12 @@ export class MultipleItemsDemoComponent implements OnInit {
     noDataMessage: "",
     actions: false,
     attr: {class: 'items-table'},
+    //some pagination options:
     pager: {display: false},
+    //    pager: {display: true},//pagination
+    // pager: {display: true, perPage: 10 },//pagination
+    // pager: {display: true, showPagesCount: 6, styleClasses: "pager-style"},//pagination with some properties
+
 
     columns: {
       name: {

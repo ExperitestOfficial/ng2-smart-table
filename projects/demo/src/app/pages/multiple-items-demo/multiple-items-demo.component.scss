@@ -13,3 +13,30 @@
   //height: 75%;
 
 }
+//style to the pager
+:host ::ng-deep
+.pager-style{
+  .ng2-smart-pagination{
+    display: flex;
+    font-size:30px;
+  }
+  li{
+    background: #22A9B6;
+    margin: 2px;
+    border: 2px solid yellow;
+    color: white;
+    width: 55px;
+    text-align: center;
+  }
+}
+//.pager-style2{
+//  .ng2-smart-pagination{
+//    display: block;
+//  }
+//  li{
+//    background: blue;
+//    margin: 2px;
+//    border: 5px solid yellow;
+//    color: white;
+//  }
+//}

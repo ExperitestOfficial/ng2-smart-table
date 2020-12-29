@@ -257,11 +257,20 @@ export class Grid {
 
   prepareSource(source: any): DataSource {
     const initialSource: any = this.getInitialSort();
+    let pagingConf = {};
     if (initialSource && initialSource['field'] && initialSource['direction']) {
       source.setSort([initialSource], false);
     }
     if (this.getSetting('pager.display') === true) {
-      source.setPaging(this.getPageToSelect(source), this.getSetting('pager.perPage'), false);
+      pagingConf = {
+        page: 1,
+        display: true,
+        perPage: this.getSetting('pager.perPage'),
+        showPagesCount: this.getSetting('pager.showPagesCount'),
+        styleClasses: this.getSetting('pager.styleClasses')
+      }
+      source.setPaging(this.getPageToSelect(source), pagingConf, false);
+
     }
 
     source.refresh();
