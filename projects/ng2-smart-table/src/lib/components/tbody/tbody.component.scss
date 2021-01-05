@@ -1,4 +1,8 @@
 :host {
+  tr {
+    vertical-align: middle !important;
+  }
+
   .ng2-smart-row {
     &.selected {
       background: rgba(0, 0, 0, 0.05);
