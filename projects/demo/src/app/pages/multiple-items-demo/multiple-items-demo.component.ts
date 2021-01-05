@@ -24,13 +24,16 @@ export class MultipleItemsDemoComponent implements OnInit {
       return 'row-class';
     },
     noDataMessage: "",
+
+    selectMode: 'multi',//for multi-selection
+
     actions: false,
     attr: {class: 'items-table'},
     //some pagination options:
-    pager: {display: false},
+    // pager: {display: false},
     //    pager: {display: true},//pagination
     // pager: {display: true, perPage: 10 },//pagination
-    // pager: {display: true, showPagesCount: 6, styleClasses: "pager-style"},//pagination with some properties
+    pager: {display: true, showPagesCount: 6, styleClasses: "pager-style"},//pagination with some properties
 
 
     columns: {

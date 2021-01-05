@@ -13,20 +13,34 @@
   //height: 75%;
 
 }
+
 //style to the pager
-:host ::ng-deep
-.pager-style{
-  .ng2-smart-pagination{
-    display: flex;
-    font-size:30px;
+:host ::ng-deep {
+  tr{
+    height: 85px !important;
   }
-  li{
-    background: #22A9B6;
-    margin: 2px;
-    border: 2px solid yellow;
-    color: white;
-    width: 55px;
-    text-align: center;
+  tr:nth-child(odd) {
+    background: yellow;
+  }
+
+  tr:nth-child(even) {
+    background: moccasin;
+  }
+
+  .pager-style {
+    .ng2-smart-pagination {
+      display: flex;
+      font-size: 30px;
+    }
+
+    li {
+      background: #22A9B6;
+      margin: 2px;
+      border: 2px solid yellow;
+      color: white;
+      width: 55px;
+      text-align: center;
+    }
   }
 }
 //.pager-style2{
