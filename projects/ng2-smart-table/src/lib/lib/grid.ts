@@ -190,16 +190,24 @@ export class Grid {
   }
 
   processDataChange(changes: any) {
+    const rowsDataIDs = this.getSelectedRows().map(row => row.getData().id);
     if (this.shouldProcessChange(changes)) {
       this.dataSet.setData(changes['elements']);
       if (this.getSetting('selectMode') !== 'multi') {
         const row = this.determineRowToSelect(changes);
-
         if (row) {
           this.onSelectRowSource.next(row);
         } else {
           this.onDeselectRowSource.next(null);
         }
+      }
+      if (rowsDataIDs){
+        rowsDataIDs.forEach(rowId => {
+          const currentRow = this.getRows().find(row => row.getData().id === rowId);
+          if (currentRow) {
+            this.multipleSelectRow(currentRow);
+          }
+        });
       }
     }
   }
@@ -225,7 +233,7 @@ export class Grid {
     if (['load', 'page', 'filter', 'sort', 'refresh'].indexOf(changes['action']) !== -1) {
       return this.dataSet.select(this.getRowIndexToSelect());
     }
-
+    // since we always initialize data with -1 this condition is always true
     if (this.shouldSkipSelection()) {
       return null;
     }
@@ -309,7 +317,11 @@ export class Grid {
 
   private getSelectionInfo(): { perPage: number, page: number, selectedRowIndex: number, switchPageToSelectedRowPage: boolean } {
     const switchPageToSelectedRowPage: boolean = this.getSetting('switchPageToSelectedRowPage');
-    const selectedRowIndex: number = Number(this.getSetting('selectedRowIndex', 0)) || 0;
+    /**
+     * In default logic we passed selectedRowIndex: -1 in settings
+     * if we set here -1 we shouldn't do it and table won't select row.
+     */
+    const selectedRowIndex: number = Number(this.getSetting('selectedRowIndex', -1)) || -1;
     const { perPage, page }: { perPage: number, page: number } = this.getSetting('pager');
     return { perPage, page, selectedRowIndex, switchPageToSelectedRowPage };
   }
@@ -360,7 +372,8 @@ export class Grid {
      * !!! We should skip a row only in cases when `selectedRowIndex` < 0
      * because when < 0 all lines must be deselected
      */
-    const selectedRowIndex = Number(this.getSetting('selectedRowIndex'));
+    // const selectedRowIndex = Number(this.getSetting('selectedRowIndex'));
+    const selectedRowIndex = -1;
     return selectedRowIndex < 0;
   }
 }

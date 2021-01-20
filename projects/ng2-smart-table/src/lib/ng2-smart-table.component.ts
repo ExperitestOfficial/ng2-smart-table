@@ -17,6 +17,9 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
 
 
   @Input() source: any;
+  /**
+   * selectedRowIndex we always initialize data with -1 this condition won't select first row automaticaly
+   */
   @Input() settings: Object = {};
   @Input() debug = false;
 
@@ -263,7 +266,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   sort($event: any) {
-    this.resetAllSelector();
+    // this.resetAllSelector();
   }
 
   filter($event: any) {
