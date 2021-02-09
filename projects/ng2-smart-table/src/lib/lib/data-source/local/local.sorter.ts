@@ -1,11 +1,8 @@
 export function compareValues(direction: any, a: any, b: any) {
-  if (a < b) {
-    return -1 * direction;
+  if (!a || !b) {
+    return (!b && !a ? 0 : (b ? -1 : 1)) * direction;
   }
-  if (a > b) {
-    return direction;
-  }
-  return 0;
+  return a.toString().localeCompare(b.toString(), 'en', {numeric: true, ignorePunctuation: true}) * direction;
 }
 
 export class LocalSorter {
