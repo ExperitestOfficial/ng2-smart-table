@@ -19,7 +19,7 @@ import { DefaultFilter } from './default-filter';
     </select>
   `,
 })
-export class SelectFilterComponent extends DefaultFilter implements OnInit {
+export class SelectFilterComponent<T extends object> extends DefaultFilter<T> implements OnInit {
 
   @ViewChild('inputControl', { read: NgControl, static: true }) inputControl: NgControl;
 
@@ -34,6 +34,6 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
         distinctUntilChanged(),
         debounceTime(this.delay)
       )
-      .subscribe((value: string) => this.setFilter());
+      .subscribe(() => this.setFilter());
   }
 }

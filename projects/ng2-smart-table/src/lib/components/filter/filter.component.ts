@@ -24,8 +24,8 @@ import { Subscription } from 'rxjs';
       </div>
     `,
 })
-export class FilterComponent extends FilterDefault implements OnChanges {
-  query: string = '';
+export class FilterComponent<T extends object> extends FilterDefault<T> implements OnChanges {
+  query = '';
   protected dataChangedSub: Subscription;
 
   ngOnChanges(changes: SimpleChanges) {
@@ -33,7 +33,7 @@ export class FilterComponent extends FilterDefault implements OnChanges {
       if (!changes.source.firstChange) {
         this.dataChangedSub.unsubscribe();
       }
-      this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
+      this.dataChangedSub = this.source.onChanged().subscribe(() => {
         const filterConf = this.source.getFilter();
         if (filterConf && filterConf.filters && filterConf.filters.length === 0) {
           this.query = '';
@@ -41,8 +41,8 @@ export class FilterComponent extends FilterDefault implements OnChanges {
           // add a check for existing filters an set the query if one exists for this column
           // this covers instances where the filter is set by user code while maintaining existing functionality
         } else if (filterConf && filterConf.filters && filterConf.filters.length > 0) {
-          filterConf.filters.forEach((k: any, v: any) => {
-            if (k.field == this.column.id) {
+          filterConf.filters.forEach((k) => {
+            if (k.field === this.column.id) {
               this.query = k.search;
             }
           });

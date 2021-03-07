@@ -11,11 +11,11 @@ import { DataSource } from '../../../lib/data-source/data-source';
     </div>
   `,
 })
-export class ColumnTitleComponent {
+export class ColumnTitleComponent<T extends object> {
 
-  @Input() column: Column;
-  @Input() source: DataSource;
+  @Input() column: Column<T, unknown, keyof T>;
+  @Input() source: DataSource<T>;
 
-  @Output() sort = new EventEmitter<any>();
+  @Output() sort = new EventEmitter<void>();
 
 }

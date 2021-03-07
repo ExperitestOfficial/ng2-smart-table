@@ -6,17 +6,17 @@ import { DataSource } from '../../lib/data-source/data-source';
 @Component({
   template: '',
 })
-export class FilterDefault {
+export class FilterDefault<T extends object> {
 
-  @Input() column: Column;
-  @Input() source: DataSource;
-  @Input() inputClass: string = '';
+  @Input() column: Column<T, unknown, keyof T>;
+  @Input() source: DataSource<T>;
+  @Input() inputClass = '';
 
-  @Output() filter = new EventEmitter<any>();
+  @Output() filter = new EventEmitter<string>();
 
-  query: string = '';
+  query = '';
 
-  onFilter(query: string) {
+  onFilter(query: string): void {
     this.source.addFilter({
       field: this.column.id,
       search: query,

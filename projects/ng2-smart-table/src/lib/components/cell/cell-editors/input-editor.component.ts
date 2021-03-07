@@ -17,7 +17,7 @@ import { DefaultEditor } from './default-editor';
            (keydown.esc)="onStopEditing.emit()">
     `,
 })
-export class InputEditorComponent extends DefaultEditor {
+export class InputEditorComponent<T extends object, C, D extends keyof T> extends DefaultEditor<T, C, D> {
 
   constructor() {
     super();

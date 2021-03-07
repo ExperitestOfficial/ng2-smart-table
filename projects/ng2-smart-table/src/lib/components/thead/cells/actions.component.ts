@@ -13,9 +13,9 @@ import { Grid } from '../../../lib/grid';
         (click)="$event.preventDefault();grid.createFormShown = false;"></a>
   `,
 })
-export class ActionsComponent implements OnChanges {
+export class ActionsComponent<T extends object> implements OnChanges {
 
-  @Input() grid: Grid;
+  @Input() grid: Grid<T>;
   @Output() create = new EventEmitter<any>();
 
   createButtonContent: string;

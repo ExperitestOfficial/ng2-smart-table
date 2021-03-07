@@ -10,6 +10,8 @@ import { THeadModule } from './components/thead/thead.module';
 
 import { Ng2SmartTableComponent } from './ng2-smart-table.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
 
 @NgModule({
   imports: [
@@ -21,7 +23,8 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     PagerModule,
     TBodyModule,
     THeadModule,
-    ScrollingModule
+    ScrollingModule,
+    MatAutocompleteModule
   ],
   declarations: [
     Ng2SmartTableComponent,

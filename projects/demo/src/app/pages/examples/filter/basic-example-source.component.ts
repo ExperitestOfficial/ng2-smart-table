@@ -1,17 +1,23 @@
 import { Component } from '@angular/core';
 
-import { LocalDataSource } from 'ng2-smart-table';
+import {LocalDataSource, SmartTableNg2Setting} from 'ng2-smart-table';
 
+interface ExampleData {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+}
 @Component({
   selector: 'basic-example-source',
   template: `
-    <input #search class="search" type="text" placeholder="Search..." (keydown.enter)="onSearch(search.value)">
-    <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
+      <input #search class="search" type="text" placeholder="Search..." (keydown.enter)="onSearch(search.value)">
+      <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
   `,
 })
 export class BasicExampleSourceComponent {
 
-  settings = {
+  settings: SmartTableNg2Setting<ExampleData> = {
     columns: {
       id: {
         title: 'ID',
@@ -32,7 +38,7 @@ export class BasicExampleSourceComponent {
     },
   };
 
-  data = [
+  data: ExampleData[] = [
     {
       id: 1,
       name: 'Leanne Graham',
@@ -101,13 +107,17 @@ export class BasicExampleSourceComponent {
     },
   ];
 
-  source: LocalDataSource;
+  source: LocalDataSource<ExampleData>;
 
   constructor() {
     this.source = new LocalDataSource(this.data);
   }
 
   onSearch(query: string = '') {
+    if (!query) {
+      this.source.clearFilters();
+      return;
+    }
     this.source.setFilter([
       // fields we want to inclue in the search
       {

@@ -10,11 +10,11 @@ import { DataSource } from '../../../lib/data-source/data-source';
         [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
   `,
 })
-export class AddButtonComponent implements AfterViewInit, OnChanges {
+export class AddButtonComponent<T extends object> implements AfterViewInit, OnChanges {
 
-  @Input() grid: Grid;
-  @Input() source: DataSource;
-  @Output() create = new EventEmitter<any>();
+  @Input() grid: Grid<T>;
+  @Input() source: DataSource<T>;
+  @Output() create = new EventEmitter<{source: DataSource<T>}>();
 
   isActionAdd: boolean;
   addNewButtonContent: string;
@@ -31,7 +31,7 @@ export class AddButtonComponent implements AfterViewInit, OnChanges {
     this.addNewButtonContent = this.grid.getSetting('add.addButtonContent');
   }
 
-  onAdd(event: any) {
+  onAdd(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
     if (this.grid.getSetting('mode') === 'external') {

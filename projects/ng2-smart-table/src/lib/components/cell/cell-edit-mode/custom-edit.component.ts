@@ -16,7 +16,7 @@ import { EditCellDefault } from './edit-cell-default';
     <ng-template #dynamicTarget></ng-template>
   `,
 })
-export class CustomEditComponent extends EditCellDefault implements OnChanges, OnDestroy {
+export class CustomEditComponent<T extends object, C, D extends keyof T> extends EditCellDefault<T, C, D> implements OnChanges, OnDestroy {
 
   customComponent: any;
   @ViewChild('dynamicTarget', { read: ViewContainerRef, static: true }) dynamicTarget: any;

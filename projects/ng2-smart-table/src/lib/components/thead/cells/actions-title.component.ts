@@ -8,9 +8,9 @@ import { Grid } from '../../../lib/grid';
     <div class="ng2-smart-title">{{ actionsColumnTitle }}</div>
   `,
 })
-export class ActionsTitleComponent implements AfterViewInit, OnChanges {
+export class ActionsTitleComponent<T extends object> implements AfterViewInit, OnChanges {
 
-  @Input() grid: Grid;
+  @Input() grid: Grid<T>;
 
   actionsColumnTitle: string;
 

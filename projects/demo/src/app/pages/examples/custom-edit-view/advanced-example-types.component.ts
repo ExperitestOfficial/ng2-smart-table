@@ -1,14 +1,24 @@
 import { Component } from '@angular/core';
+import {SmartTableNg2Setting} from 'ng2-smart-table';
+
+interface ExampleData {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  comments: string;
+  passed: string;
+}
 
 @Component({
   selector: 'advanced-example-types',
   template: `
-    <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
+      <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
   `,
 })
 export class AdvancedExamplesTypesComponent {
 
-  data = [
+  data: ExampleData[] = [
     {
       id: 1,
       name: 'Leanne Graham',
@@ -104,7 +114,7 @@ export class AdvancedExamplesTypesComponent {
     },
   ];
 
-  settings = {
+  settings: SmartTableNg2Setting<ExampleData> = {
     columns: {
       id: {
         title: 'ID',

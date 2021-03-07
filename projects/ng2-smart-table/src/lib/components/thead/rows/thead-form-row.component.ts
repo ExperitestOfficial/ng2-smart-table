@@ -1,13 +1,12 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 
-import { Grid } from '../../../lib/grid';
+import {ConfirmResponse, Grid} from '../../../lib/grid';
 import { Row } from '../../../lib/data-set/row';
 import { Cell } from '../../../lib/data-set/cell';
 
 @Component({
   selector: '[ng2-st-thead-form-row]',
   template: `
-      <td *ngIf=""></td>
       <td  *ngIf="showActionColumnLeft"  class="ng2-smart-actions">
         <ng2-st-actions [grid]="grid" (create)="onCreate($event)"></ng2-st-actions>
       </td>
@@ -26,33 +25,32 @@ import { Cell } from '../../../lib/data-set/cell';
       </td>
   `,
 })
-export class TheadFormRowComponent implements OnChanges {
+export class TheadFormRowComponent<T extends object> implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() row: Row;
-  @Input() createConfirm: EventEmitter<any>;
+  @Input() grid: Grid<T>;
+  @Input() row: Row<T>;
+  @Input() createConfirm: EventEmitter<ConfirmResponse<T>>;
 
-  @Output() create = new EventEmitter<any>();
+  @Output() create = new EventEmitter<ConfirmResponse<T>>();
 
   isMultiSelectVisible: boolean;
   showActionColumnLeft: boolean;
   showActionColumnRight: boolean;
   addInputClass: string;
 
-  onCreate(event: any) {
+  onCreate(event: Event): void {
     event.stopPropagation();
-
     this.grid.create(this.grid.getNewRow(), this.createConfirm);
   }
 
-  ngOnChanges(){
+  ngOnChanges(): void {
     this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
     this.showActionColumnLeft = this.grid.showActionColumn('left');
     this.showActionColumnRight = this.grid.showActionColumn('right');
     this.addInputClass = this.grid.getSetting('add.inputClass');
   }
 
-  getVisibleCells(cells: Array<Cell>): Array<Cell> {
-    return (cells || []).filter((cell: Cell) => !cell.getColumn().hide);
+  getVisibleCells(cells: Cell<T, unknown, keyof T>[]): Cell<T, unknown, keyof T>[] {
+    return (cells || []).filter((cell: Cell<T, unknown, keyof T>) => !cell.getColumn().hide);
   }
 }

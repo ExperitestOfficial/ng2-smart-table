@@ -6,7 +6,7 @@ import { DefaultFilter } from 'ng2-smart-table';
 
 @Component({
   template: `
-    <input 
+    <input
       #number
       [ngClass]="inputClass"
       [formControl]="inputControl"
@@ -15,14 +15,14 @@ import { DefaultFilter } from 'ng2-smart-table';
       type="number">
   `,
 })
-export class CustomFilterComponent extends DefaultFilter implements OnInit, OnChanges {
+export class CustomFilterComponent<T extends object> extends DefaultFilter<T> implements OnInit, OnChanges {
   inputControl = new FormControl();
 
   constructor() {
     super();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.inputControl.valueChanges
       .pipe(
         distinctUntilChanged(),
@@ -34,7 +34,7 @@ export class CustomFilterComponent extends DefaultFilter implements OnInit, OnCh
       });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.query) {
       this.query = changes.query.currentValue;
       this.inputControl.setValue(this.query);

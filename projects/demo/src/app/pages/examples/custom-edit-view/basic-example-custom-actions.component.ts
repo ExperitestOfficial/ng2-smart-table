@@ -1,14 +1,22 @@
 import { Component } from '@angular/core';
+import {SmartTableNg2Setting} from 'ng2-smart-table';
+
+interface ExampleData {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+}
 
 @Component({
   selector: 'basic-example-custom-actions',
   template: `
-    <ng2-smart-table [settings]="settings" [source]="data" (custom)="onCustom($event)"></ng2-smart-table>
+      <ng2-smart-table [settings]="settings" [source]="data" (custom)="onCustom($event)"></ng2-smart-table>
   `,
 })
 export class BasicExampleCustomActionsComponent {
 
-  settings = {
+  settings: SmartTableNg2Setting<ExampleData> = {
     actions: {
       custom: [
         {
@@ -79,6 +87,6 @@ export class BasicExampleCustomActionsComponent {
   ];
 
   onCustom(event) {
-    alert(`Custom event '${event.action}' fired on row №: ${event.data.id}`)
+    alert(`Custom event '${event.action}' fired on row №: ${event.data.id}`);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { CompleterService } from 'ng2-completer';
+import {CompleterItem, CompleterService} from 'ng2-completer';
 
 import { DefaultFilter } from './default-filter';
 import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
@@ -18,9 +18,9 @@ import { distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
     </ng2-completer>
   `,
 })
-export class CompleterFilterComponent extends DefaultFilter implements OnInit {
+export class CompleterFilterComponent<T extends object> extends DefaultFilter<T> implements OnInit {
 
-  completerContent = new Subject<any>();
+  completerContent = new Subject<CompleterItem | string>();
 
   constructor(private completerService: CompleterService) {
     super();

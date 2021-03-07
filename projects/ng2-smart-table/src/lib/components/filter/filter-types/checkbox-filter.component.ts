@@ -12,9 +12,9 @@ import { debounceTime } from 'rxjs/operators';
                 (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
   `,
 })
-export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
+export class CheckboxFilterComponent<T extends object> extends DefaultFilter<T> implements OnInit {
 
-  filterActive: boolean = false;
+  filterActive = false;
   inputControl = new FormControl();
 
   constructor() {
@@ -33,7 +33,7 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
       });
   }
 
-  resetFilter(event: any) {
+  resetFilter(event: Event): void {
     event.preventDefault();
     this.query = '';
     this.inputControl.setValue(false, { emitEvent: false });

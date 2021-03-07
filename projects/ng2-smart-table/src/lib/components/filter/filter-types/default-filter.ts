@@ -6,14 +6,14 @@ import { Column } from '../../../lib/data-set/column';
 @Component({
   template: '',
 })
-export class DefaultFilter implements Filter, OnDestroy {
+export class DefaultFilter<T extends object> implements Filter<T>, OnDestroy {
 
-  delay: number = 300;
+  delay = 300;
   changesSubscription: Subscription;
-  @Input() query: string;
+  @Input() query: string | boolean;
   @Input() inputClass: string;
-  @Input() column: Column;
-  @Output() filter = new EventEmitter<string>();
+  @Input() column: Column<T, unknown, keyof T>;
+  @Output() filter = new EventEmitter<string | boolean>();
 
   ngOnDestroy() {
     if (this.changesSubscription) {
@@ -26,12 +26,12 @@ export class DefaultFilter implements Filter, OnDestroy {
   }
 }
 
-export interface Filter {
+export interface Filter<T extends object> {
 
   delay?: number;
   changesSubscription?: Subscription;
-  query: string;
+  query: string | boolean;
   inputClass: string;
-  column: Column;
-  filter: EventEmitter<string>;
+  column: Column<T, unknown, keyof T>;
+  filter: EventEmitter<string | boolean>;
 }

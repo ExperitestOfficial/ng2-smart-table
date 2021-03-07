@@ -18,7 +18,7 @@ import { DefaultEditor } from './default-editor';
     </textarea>
     `,
 })
-export class TextareaEditorComponent extends DefaultEditor {
+export class TextareaEditorComponent<T extends object, C, D extends keyof T> extends DefaultEditor<T, C, D> {
 
   constructor() {
     super();

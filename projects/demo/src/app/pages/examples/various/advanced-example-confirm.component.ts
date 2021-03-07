@@ -1,21 +1,29 @@
 import { Component } from '@angular/core';
 
-import { LocalDataSource } from 'ng2-smart-table';
+import {LocalDataSource, SmartTableNg2Setting} from 'ng2-smart-table';
+
+interface ExampleData {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  notShownField: boolean;
+}
 
 @Component({
   selector: 'advance-example-comfirm',
   template: `
-    <ng2-smart-table
-      [settings]="settings"
-      [source]="source"
-      (deleteConfirm)="onDeleteConfirm($event)"
-      (editConfirm)="onSaveConfirm($event)"
-      (createConfirm)="onCreateConfirm($event)"></ng2-smart-table>
+      <ng2-smart-table
+              [settings]="settings"
+              [source]="source"
+              (deleteConfirm)="onDeleteConfirm($event)"
+              (editConfirm)="onSaveConfirm($event)"
+              (createConfirm)="onCreateConfirm($event)"></ng2-smart-table>
   `,
 })
 export class AdvancedExampleConfirmComponent {
 
-  settings = {
+  settings: SmartTableNg2Setting<ExampleData> = {
     delete: {
       confirmDelete: true,
     },
@@ -41,7 +49,7 @@ export class AdvancedExampleConfirmComponent {
     },
   };
 
-  data = [
+  data: ExampleData[] = [
     {
       id: 1,
       name: 'Leanne Graham',
@@ -121,7 +129,7 @@ export class AdvancedExampleConfirmComponent {
     }
   ];
 
-  source: LocalDataSource;
+  source: LocalDataSource<ExampleData>;
 
   constructor() {
     this.source = new LocalDataSource(this.data);
@@ -137,7 +145,7 @@ export class AdvancedExampleConfirmComponent {
 
   onSaveConfirm(event) {
     if (window.confirm('Are you sure you want to save?')) {
-      event.newData['name'] += ' + added in code';
+      event.newData.name += ' + added in code';
       event.confirm.resolve(event.newData);
     } else {
       event.confirm.reject();
@@ -146,7 +154,7 @@ export class AdvancedExampleConfirmComponent {
 
   onCreateConfirm(event) {
     if (window.confirm('Are you sure you want to create?')) {
-      event.newData['name'] += ' + added in code';
+      event.newData.name += ' + added in code';
       event.confirm.resolve(event.newData);
     } else {
       event.confirm.reject();

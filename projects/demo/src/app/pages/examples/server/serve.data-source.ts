@@ -4,9 +4,9 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class CustomServerDataSource extends LocalDataSource {
+export class CustomServerDataSource<T extends object> extends LocalDataSource<T> {
 
-  lastRequestCount: number = 0;
+  lastRequestCount = 0;
 
   constructor(protected http: HttpClient) {
     super();
@@ -25,14 +25,14 @@ export class CustomServerDataSource extends LocalDataSource {
       });
     }
 
-    if (this.pagingConf && this.pagingConf['page'] && this.pagingConf['perPage']) {
-      url += `_page=${this.pagingConf['page']}&_limit=${this.pagingConf['perPage']}&`;
+    if (this.pagingConf && this.pagingConf.page && this.pagingConf.perPage) {
+      url += `_page=${this.pagingConf.page}&_limit=${this.pagingConf.perPage}&`;
     }
 
     if (this.filterConf.filters) {
       this.filterConf.filters.forEach((fieldConf) => {
-        if (fieldConf['search']) {
-          url += `${fieldConf['field']}_like=${fieldConf['search']}&`;
+        if (fieldConf.search) {
+          url += `${fieldConf.field}_like=${fieldConf.search}&`;
         }
       });
     }

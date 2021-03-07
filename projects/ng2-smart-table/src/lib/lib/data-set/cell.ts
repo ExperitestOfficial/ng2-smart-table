@@ -2,22 +2,22 @@ import { Column } from './column';
 import { DataSet } from './data-set';
 import { Row } from './row';
 
-export function prepareValue (value: any) { return value }
+export function prepareValue<T>(value: T) { return value; }
 
-export class Cell {
+export class Cell<T extends object, D, C extends keyof  T> {
 
-  newValue: any = '';
-  protected static PREPARE = prepareValue;
-
-  constructor(protected value: any, protected row: Row, protected column: any, protected dataSet: DataSet) {
+  constructor(protected value: any, protected row: Row<T>, protected column: any, protected dataSet: DataSet<T>) {
     this.newValue = value;
   }
+  protected static PREPARE = prepareValue;
 
-  getColumn(): Column {
+  newValue: any = '';
+
+  getColumn(): Column<T, D, C> {
     return this.column;
   }
 
-  getRow(): Row {
+  getRow(): Row<T> {
     return this.row;
   }
 
@@ -31,7 +31,7 @@ export class Cell {
     this.newValue = value;
   }
 
-  getId(): string {
+  getId(): keyof T {
     return this.getColumn().id;
   }
 

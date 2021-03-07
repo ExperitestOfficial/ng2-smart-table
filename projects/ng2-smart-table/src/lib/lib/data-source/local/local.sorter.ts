@@ -7,10 +7,11 @@ export function compareValues(direction: any, a: any, b: any) {
 
 export class LocalSorter {
 
-  static sort(data: Array<any>, field: string, direction: string, customCompare?: Function): Array<any> {
+  static sort<T>(data: T[], field: keyof T, direction: string,
+                 customCompare?: (direction: 1 | -1, value1: any, value2: any) => number): T[] {
 
     const dir: number = (direction === 'asc') ? 1 : -1;
-    const compare: Function = customCompare ? customCompare : compareValues;
+    const compare: (direction: 1 | -1, value1: any, value2: any) => number = customCompare ? customCompare : compareValues;
 
     return data.sort((a, b) => {
       return compare.call(null, dir, a[field], b[field]);

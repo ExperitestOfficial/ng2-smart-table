@@ -3,16 +3,23 @@ import { Component } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 import { BasicExampleLoadService } from './basic-example-load.service';
 
+interface ExampleData {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+}
+
 @Component({
   selector: 'basic-example-load',
   providers: [BasicExampleLoadService],
   template: `
-    <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
+      <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
   `,
 })
 export class BasicExampleLoadComponent {
 
-  source: LocalDataSource;
+  source: LocalDataSource<ExampleData>;
 
   settings = {
     columns: {

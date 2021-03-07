@@ -2,10 +2,16 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ServerDataSource } from 'ng2-smart-table';
 
+interface ExampleData {
+  id: number;
+  albumId: number;
+  title: string;
+  url: string;
+}
 @Component({
   selector: 'advanced-example-server',
   template: `
-    <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
+      <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
   `,
 })
 export class AdvancedExampleServerComponent {
@@ -27,7 +33,7 @@ export class AdvancedExampleServerComponent {
     },
   };
 
-  source: ServerDataSource;
+  source: ServerDataSource<ExampleData>;
 
   constructor(http: HttpClient) {
     this.source = new ServerDataSource(http, { endPoint: 'https://jsonplaceholder.typicode.com/photos' });

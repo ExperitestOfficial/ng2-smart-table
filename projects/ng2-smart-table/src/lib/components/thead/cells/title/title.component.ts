@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Subscription} from 'rxjs';
 
-import { DataSource } from '../../../../lib/data-source/data-source';
-import { Column } from '../../../../lib/data-set/column';
+import {DataSource} from '../../../../lib/data-source/data-source';
+import {Column} from '../../../../lib/data-set/column';
 
 @Component({
   selector: 'ng2-smart-table-title',
@@ -17,12 +17,12 @@ import { Column } from '../../../../lib/data-set/column';
     <span class="ng2-smart-sort" *ngIf="!column.isSortable">{{ column.title }}</span>
   `,
 })
-export class TitleComponent implements OnChanges {
+export class TitleComponent<T extends object> implements OnChanges {
 
-  currentDirection = '';
-  @Input() column: Column;
-  @Input() source: DataSource;
-  @Output() sort = new EventEmitter<any>();
+  currentDirection: 'asc' | 'desc' | '' = '';
+  @Input() column: Column<T, unknown, keyof T>;
+  @Input() source: DataSource<T>;
+  @Output() sort = new EventEmitter<void>();
 
   protected dataChangedSub: Subscription;
 
@@ -31,18 +31,14 @@ export class TitleComponent implements OnChanges {
       if (!changes.source.firstChange) {
         this.dataChangedSub.unsubscribe();
       }
-      this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
+      this.dataChangedSub = this.source.onChanged().subscribe(() => {
         const sortConf = this.source.getSort();
 
-        if (sortConf.length > 0 && sortConf[0]['field'] === this.column.id) {
-          this.currentDirection = sortConf[0]['direction'];
+        if (sortConf.length > 0 && sortConf[0].field === this.column.id) {
+          this.currentDirection = sortConf[0].direction;
         } else {
           this.currentDirection = '';
         }
-
-        sortConf.forEach((fieldConf: any) => {
-
-        });
       });
     }
   }
@@ -57,13 +53,12 @@ export class TitleComponent implements OnChanges {
         compare: this.column.getCompareFunction(),
       },
     ]);
-    this.sort.emit(null);
+    this.sort.emit();
   }
 
   changeSortDirection(): string {
     if (this.currentDirection) {
-      const newDirection = this.currentDirection === 'asc' ? 'desc' : 'asc';
-      this.currentDirection = newDirection;
+      this.currentDirection = this.currentDirection === 'asc' ? 'desc' : 'asc';
     } else {
       this.currentDirection = this.column.sortDirection;
     }

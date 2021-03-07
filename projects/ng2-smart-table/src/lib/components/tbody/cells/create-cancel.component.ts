@@ -1,6 +1,6 @@
 import {Component, Input, EventEmitter, OnChanges} from '@angular/core';
 
-import {Grid} from '../../../lib/grid';
+import {ConfirmResponse, Grid} from '../../../lib/grid';
 import {Row} from '../../../lib/data-set/row';
 
 @Component({
@@ -12,30 +12,30 @@ import {Row} from '../../../lib/data-set/row';
     </div>
   `,
 })
-export class TbodyCreateCancelComponent implements OnChanges {
+export class TbodyCreateCancelComponent<T extends object> implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() row: Row;
-  @Input() editConfirm: EventEmitter<any>;
+  @Input() grid: Grid<T>;
+  @Input() row: Row<T>;
+  @Input() editConfirm: EventEmitter<ConfirmResponse<T>>;
 
   cancelButtonContent: string;
   saveButtonContent: string;
 
-  onSave(event: any) {
+  onSave(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
 
     this.grid.save(this.row, this.editConfirm);
   }
 
-  onCancelEdit(event: any) {
+  onCancelEdit(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
 
     this.row.isInEditing = false;
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.saveButtonContent = this.grid.getSetting('edit.saveButtonContent');
     this.cancelButtonContent = this.grid.getSetting('edit.cancelButtonContent');
   }

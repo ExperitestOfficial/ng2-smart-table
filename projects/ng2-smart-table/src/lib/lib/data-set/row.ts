@@ -2,18 +2,18 @@ import { Cell } from './cell';
 import { Column } from './column';
 import { DataSet } from './data-set';
 
-export class Row {
+export class Row<T extends object> {
 
-  isSelected: boolean = false;
-  isInEditing: boolean = false;
-  cells: Array<Cell> = [];
+  isSelected = false;
+  isInEditing = false;
+  cells: Cell<T, unknown, keyof T>[] = [];
 
 
-  constructor(public index: number, protected data: any, protected _dataSet: DataSet) {
+  constructor(public index: number, protected data: T, protected dataSet: DataSet<T>) {
     this.process();
   }
 
-  getCell(column: Column): Cell {
+  getCell<K extends keyof T>(column: Column<T, unknown, K>): Cell<T, unknown, keyof T> {
     return this.cells.find(el => el.getColumn() === column);
   }
 
@@ -21,7 +21,7 @@ export class Row {
     return this.cells;
   }
 
-  getData(): any {
+  getData(): T {
     return this.data;
   }
 
@@ -29,28 +29,28 @@ export class Row {
     return this.isSelected;
   }
 
-  getNewData(): any {
+  getNewData(): Partial<T> {
     const values = Object.assign({}, this.data);
     this.getCells().forEach((cell) => values[cell.getColumn().id] = cell.newValue);
     return values;
   }
 
-  setData(data: any): any {
+  setData(data: T): void {
     this.data = data;
     this.process();
   }
 
-  process() {
+  process(): void {
     this.cells = [];
-    this._dataSet.getColumns().forEach((column: Column) => {
+    this.dataSet.getColumns().forEach(<K extends keyof T, D>(column: Column<T, D, K>) => {
       const cell = this.createCell(column);
       this.cells.push(cell);
     });
   }
 
-  createCell(column: Column): Cell {
+  createCell<K extends keyof T>(column: Column<T, unknown, K>): Cell<T, unknown, keyof T> {
     const defValue = (column as any).settings.defaultValue ? (column as any).settings.defaultValue : '';
     const value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
-    return new Cell(value, this, column, this._dataSet);
+    return new Cell(value, this, column, this.dataSet);
   }
 }

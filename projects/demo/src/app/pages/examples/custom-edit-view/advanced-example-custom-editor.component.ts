@@ -3,16 +3,24 @@ import { Component } from '@angular/core';
 import { CustomEditorComponent } from './custom-editor.component';
 import { CustomRenderComponent } from './custom-render.component';
 import { CustomFilterComponent } from './custom-filter.component';
+import {SmartTableNg2Setting} from 'ng2-smart-table';
+
+interface ExampleData {
+  id: number;
+  name: string;
+  username: string;
+  link: string;
+}
 
 @Component({
   selector: 'advanced-example-custom-editor',
   template: `
-    <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
+      <ng2-smart-table [settings]="settings" [source]="data"></ng2-smart-table>
   `,
 })
 export class AdvancedExamplesCustomEditorComponent {
 
-  data = [
+  data: ExampleData[] = [
     {
       id: 1,
       name: 'Leanne Graham',
@@ -39,7 +47,7 @@ export class AdvancedExamplesCustomEditorComponent {
     },
   ];
 
-  settings = {
+  settings: SmartTableNg2Setting<ExampleData> = {
     columns: {
       id: {
         title: 'ID',

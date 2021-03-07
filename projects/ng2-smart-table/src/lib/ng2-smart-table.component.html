@@ -13,17 +13,17 @@
         <thead ng2-st-thead *ngIf="!isHideHeader || !isHideSubHeader"
                [grid]="grid"
                [isAllSelected]="isAllSelected"
-               [source]="source"
+               [source]="dataSource"
                [createConfirm]="createConfirm"
                (create)="create.emit($event)"
-               (selectAllRows)="onSelectAllRows($event)"
-               (sort)="sort($event)"
+               (selectAllRows)="onSelectAllRows()"
+               (sort)="sort()"
                (filter)="filter($event)">
         </thead>
 
 
         <tbody ng2-st-tbody [grid]="grid"
-               [source]="source"
+               [source]="dataSource"
                [deleteConfirm]="deleteConfirm"
                [editConfirm]="editConfirm"
                [rowClassFunction]="rowClassFunction"
@@ -51,17 +51,17 @@
         <thead ng2-st-thead *ngIf="!isHideHeader || !isHideSubHeader"
                [grid]="grid"
                [isAllSelected]="isAllSelected"
-               [source]="source"
+               [source]="dataSource"
                [createConfirm]="createConfirm"
                (create)="create.emit($event)"
-               (selectAllRows)="onSelectAllRows($event)"
-               (sort)="sort($event)"
+               (selectAllRows)="onSelectAllRows()"
+               (sort)="sort()"
                (filter)="filter($event)">
         </thead>
 
 
         <tbody ng2-st-tbody [grid]="grid"
-               [source]="source"
+               [source]="dataSource"
                [deleteConfirm]="deleteConfirm"
                [editConfirm]="editConfirm"
                [rowClassFunction]="rowClassFunction"
@@ -79,13 +79,11 @@
       </table>
 
       <ng2-smart-table-pager *ngIf="isPagerDisplay"
-                             [source]="source"
+                             [source]="dataSource"
                              [perPageSelect]="perPageSelect"
                              (changePage)="changePage($event)">
       </ng2-smart-table-pager>
 
     </div>
-
-
   </ng-template>
 </div>

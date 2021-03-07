@@ -20,7 +20,7 @@ import { DefaultEditor } from './default-editor';
     </select>
     `,
 })
-export class SelectEditorComponent extends DefaultEditor {
+export class SelectEditorComponent<T extends object, C, D extends keyof T> extends DefaultEditor<T, C, D> {
 
   constructor() {
     super();

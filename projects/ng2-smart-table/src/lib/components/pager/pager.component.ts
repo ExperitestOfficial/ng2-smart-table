@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {Subscription} from 'rxjs';
 
-import { DataSource } from '../../lib/data-source/data-source';
+import {DataSource, SourceChangeEvent} from '../../lib/data-source/data-source';
 
 @Component({
   selector: 'ng2-smart-table-pager',
@@ -11,7 +11,7 @@ import { DataSource } from '../../lib/data-source/data-source';
       <ul class="ng2-smart-pagination pagination">
         <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
           <a class="ng2-smart-page-link page-link" href="#"
-          (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
+             (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
             <span aria-hidden="true">&lt;&lt;</span>
             <span class="sr-only">First</span>
           </a>
@@ -24,11 +24,11 @@ import { DataSource } from '../../lib/data-source/data-source';
           </a>
         </li>
         <li class="ng2-smart-page-item page-item"
-        [ngClass]="{active: getPage() == page}" *ngFor="let page of getPages()">
+            [ngClass]="{active: getPage() == page}" *ngFor="let page of getPages()">
           <span class="ng2-smart-page-link page-link"
-          *ngIf="getPage() == page">{{ page }} <span class="sr-only">(current)</span></span>
+                *ngIf="getPage() == page">{{ page }} <span class="sr-only">(current)</span></span>
           <a class="ng2-smart-page-link page-link" href="#"
-          (click)="paginate(page)" *ngIf="getPage() != page">{{ page }}</a>
+             (click)="paginate(page)" *ngIf="getPage() != page">{{ page }}</a>
         </li>
 
         <li class="ng2-smart-page-item page-item"
@@ -41,9 +41,9 @@ import { DataSource } from '../../lib/data-source/data-source';
         </li>
 
         <li class="ng2-smart-page-item page-item"
-        [ngClass]="{disabled: getPage() == getLast()}">
+            [ngClass]="{disabled: getPage() == getLast()}">
           <a class="ng2-smart-page-link page-link" href="#"
-          (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
+             (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
             <span aria-hidden="true">&gt;&gt;</span>
             <span class="sr-only">Last</span>
           </a>
@@ -55,28 +55,27 @@ import { DataSource } from '../../lib/data-source/data-source';
       <label for="per-page">
         Per Page:
       </label>
-      <select (change)="onChangePerPage($event)" [(ngModel)]="currentPerPage" id="per-page">
+      <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
         <option *ngFor="let item of perPageSelect" [value]="item">{{ item }}</option>
       </select>
     </nav>
   `,
 })
-export class PagerComponent implements OnChanges {
+export class PagerComponent<T extends object> implements OnChanges {
 
-  @Input() source: DataSource;
+  @Input() source: DataSource<T>;
   @Input() perPageSelect: any[] = [];
 
-  @Output() changePage = new EventEmitter<any>();
+  @Output() changePage = new EventEmitter<{ page: number }>();
 
   currentPerPage: any;
 
   protected pages: Array<any>;
   protected page: number;
-  protected count: number = 0;
+  protected count = 0;
   protected perPage: number;
   protected showPagesCount = 4;
-  styleClasses="";
-
+  styleClasses = '';
 
 
   protected dataChangedSub: Subscription;
@@ -91,7 +90,6 @@ export class PagerComponent implements OnChanges {
         this.perPage = this.source.getPaging().perPage;
         this.showPagesCount = this.source.getPaging().showPagesCount;
         this.styleClasses = this.source.getPaging().styleClasses;
-
 
 
         this.currentPerPage = this.perPage;
@@ -110,13 +108,12 @@ export class PagerComponent implements OnChanges {
    * We change the page here depending on the action performed against data source
    * if a new element was added to the end of the table - then change the page to the last
    * if a new element was added to the beginning of the table - then to the first page
-   * @param changes
    */
-  processPageChange(changes: any) {
-    if (changes['action'] === 'prepend') {
+  processPageChange(changes: SourceChangeEvent<T>) {
+    if (changes.action === 'prepend') {
       this.source.setPage(1);
     }
-    if (changes['action'] === 'append') {
+    if (changes.action === 'append') {
       this.source.setPage(this.getLast());
     }
   }
@@ -128,7 +125,7 @@ export class PagerComponent implements OnChanges {
   paginate(page: number): boolean {
     this.source.setPage(page);
     this.page = page;
-    this.changePage.emit({ page });
+    this.changePage.emit({page});
     return false;
   }
 
@@ -177,7 +174,7 @@ export class PagerComponent implements OnChanges {
     }
   }
 
-  onChangePerPage(event: any) {
+  onChangePerPage(): void {
     if (this.currentPerPage) {
 
       if (typeof this.currentPerPage === 'string' && this.currentPerPage.toLowerCase() === 'all') {

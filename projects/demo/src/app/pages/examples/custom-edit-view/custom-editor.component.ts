@@ -26,7 +26,7 @@ import { DefaultEditor } from 'ng2-smart-table';
     <div [hidden]="true" [innerHTML]="cell.getValue()" #htmlValue></div>
   `,
 })
-export class CustomEditorComponent extends DefaultEditor implements AfterViewInit {
+export class CustomEditorComponent<T extends object, C, D extends keyof T> extends DefaultEditor<T, C, D> implements AfterViewInit {
 
   @ViewChild('name') name: ElementRef;
   @ViewChild('url') url: ElementRef;

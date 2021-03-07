@@ -1,31 +1,185 @@
-import {Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnDestroy, OnInit} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, Type} from '@angular/core';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {Grid} from './lib/grid';
 import {DataSource} from './lib/data-source/data-source';
 import {Row} from './lib/data-set/row';
 import {deepExtend, getPageForRowIndex} from './lib/helpers';
-import {LocalDataSource} from './lib/data-source/local/local.data-source';
+import {LocalDataSource, PagingConfiguration} from './lib/data-source/local/local.data-source';
+import {CompleterData} from 'ng2-completer';
+import {Ng2CustomComponent} from './components/filter/custom-filter.component';
+import {SortDirection} from './lib/data-set/column';
+
+/**
+ * Settings for the table column with actions buttons
+ */
+export interface SmartTableNgAction {
+  edit?: boolean;
+  position?: 'right' | 'left';
+  columnTitle?: string;
+  custom?: CustomST2Button[];
+  add?: boolean;
+  delete?: boolean;
+}
+/**
+ * Interface for custom action button.
+ * 'name' - describes the button action
+ * 'title' - text inside button
+ */
+export interface CustomST2Button {
+  name: string;
+  title: string;
+}
+
+export interface SmartTableEventRow<T extends object> {
+  confirm?: any;
+  data: T;
+  newData?: T;
+  isSelected?: boolean;
+  source: DataSource<T>;
+  selected?: T[];
+}
+
+export interface Pager extends PagingConfiguration {
+  display?: boolean;
+  showPagesCount?: number;
+  styleClasses?: string;
+}
+export interface SmartTableNg2Setting<T extends object> {
+  pager?: Pager;
+  mode?: 'inline' | 'external' | 'click-to-edit';
+  selectMode?: string;
+  noDataMessage?: string;
+  filter?: {
+    inputClass: string;
+  };
+  attr?: {
+    class?: string;
+    id?: string,
+  };
+  switchPageToSelectedRowPage?: boolean;
+  hideHeader?: boolean;
+  hideSubHeader?: boolean;
+  actions?: SmartTableNgAction | boolean;
+  columns?: SmartTableNgColumns<T>;
+  rowClassFunction?: (row: SmartTableEventRow<T>) => string;
+  edit?: {
+    inputClass?: string;
+    confirmSave: boolean;
+    editButtonContent?: string;
+    saveButtonContent?: string,
+    cancelButtonContent?: string,
+  };
+  add?: {
+    inputClass?: string,
+    addButtonContent?: string,
+    createButtonContent?: string,
+    cancelButtonContent?: string,
+    confirmCreate: boolean,
+  };
+  delete?: {
+    confirmDelete: boolean;
+    deleteButtonContent?: string;
+  };
+  selectedRowIndex?: number;
+}
+export type ColumnType = 'html' | 'custom' | '' | 'text' | 'string';
+export type SmartTableNgColumns<T extends object> = {
+  [key in keyof T]?: SmartTableNgColumn<T, unknown, key>;
+};
+export interface SmartTableNgColumn<T extends object, D, K extends keyof T> {
+  addable?: boolean;
+  editable?: boolean;
+  title: string;
+  filter?: false | SmartTableColumnConfig; // TODO true might be required
+  type?: ColumnType;
+  width?: string;
+  valuePrepareFunction?:
+    (cell: string | number | boolean, rowData?: T, cellData?: SmartTableNgCellData) => D;
+  class?: string;
+  renderComponent?: Type<unknown>; // Don't do it specific type since it's serving as component which is function
+  hide?: boolean;
+  filterFunction?: (value: T[K], search: string) => boolean;
+  onComponentInitFunction?: (instance: Ng2CustomComponent<T, K>) => void;
+  editor?: SmartTableNgEditor;
+  sort?: false | SortDirection;
+  compareFunction?: (direction: number, firstElem: T[K], secondElem: T[K]) => number;
+  sortDirection?: SortDirection;
+}
+
+export interface SmartTableNgEditor extends SmartTableColumnConfig {
+  type: 'text' | 'textarea' | 'completer' | 'list' | 'checkbox' | 'custom' | '';
+}
+
+export interface SmartTableColumnConfig {
+  type: string;
+  config?: {
+    resetText?: string;
+    selectText?: string;
+    true?: string,
+    false?: string,
+    unique?: boolean,
+    list?: {value: string | number | boolean, title: string}[],
+    completer?: {
+      data?: unknown[] | Observable<unknown>,
+      searchFields?: string;
+      descriptionField?: string;
+      titleField?: string;
+      pause?: number,
+      placeholder?: string,
+      dataService?: CompleterData & {descriptionField: (field: string) => void},
+      minSearchLength?: number
+    }
+  };
+  component?: Type<unknown>;
+}
+
+export interface SmartTableNgCellData {
+  column: {
+    id: string; // The name of the column unique id
+  };
+  rowIdentifier?: RowId;
+  value: string | number | boolean;
+}
+
+export type RowId = number | string | boolean;
+
+export function isRowId(o: any): o is RowId {
+  return typeof o === 'number' || typeof o === 'string' || typeof o === 'boolean';
+}
+
+export interface SortConfigurationProperty<T extends object, K extends keyof T> extends ConfigurationProperty<T, K> {
+  direction?: 'desc' | 'asc' | '';
+  compare?: (direction: 1 | -1, value1: any, value2: any) => number;
+}
+
+export interface ConfigurationProperty<T extends object, K extends keyof T> {
+  field?: K;
+}
+
+export interface FilterConfigurationProperty<T extends object, K extends keyof T> extends ConfigurationProperty<T, K> {
+  search?: string;
+  filter?: (value: T[K], search: string) => boolean;
+}
 
 @Component({
   selector: 'ng2-smart-table',
   styleUrls: ['./ng2-smart-table.component.scss'],
   templateUrl: './ng2-smart-table.component.html',
 })
-export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
+export class Ng2SmartTableComponent<T extends object> implements  OnInit, OnChanges, OnDestroy {
 
 
-  @Input() source: any;
+  @Input() source: DataSource<T> | T[];
   /**
    * selectedRowIndex we always initialize data with -1 this condition won't select first row automaticaly
    */
-  @Input() settings: Object = {};
+  @Input() settings: SmartTableNg2Setting<T> = {};
   @Input() debug = false;
-
-  @Output() rowSelect = new EventEmitter<any>();
-  @Output() rowDeselect = new EventEmitter<any>();
-  @Output() userRowSelect = new EventEmitter<any>();
+  @Output() rowSelect = new EventEmitter<SmartTableEventRow<T>>();
+  @Output() rowDeselect = new EventEmitter<SmartTableEventRow<T>>();
+  @Output() userRowSelect = new EventEmitter<SmartTableEventRow<T>>();
   @Output() delete = new EventEmitter<any>();
   @Output() edit = new EventEmitter<any>();
   @Output() create = new EventEmitter<any>();
@@ -35,17 +189,18 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
   @Output() createConfirm = new EventEmitter<any>();
   @Output() rowHover: EventEmitter<any> = new EventEmitter<any>();
 
+  public dataSource: DataSource<T>;
   tableClass: string;
   tableId: string;
   perPageSelect: any;
   isHideHeader: boolean;
   isHideSubHeader: boolean;
   isPagerDisplay: boolean;
-  rowClassFunction: Function;
+  rowClassFunction: (row: SmartTableEventRow<T>) => string;
 
-  grid: Grid;
-  //those are the default setting of the table setting.
-  defaultSettings: Object = {
+  grid: Grid<T>;
+  // those are the default setting of the table setting.
+  defaultSettings: SmartTableNg2Setting<T> = {
     mode: 'inline', // inline|external|click-to-edit
     selectMode: 'single', // single|multi
     /**
@@ -53,7 +208,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
      *
      * when < 0 all lines must be deselected
      */
-    selectedRowIndex: 0,
+    selectedRowIndex: -1,
     switchPageToSelectedRowPage: false,
     hideHeader: false,
     hideSubHeader: false,
@@ -104,7 +259,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     rowClassFunction: () => '',
   };
 
-  isAllSelected: boolean = false;
+  isAllSelected = false;
 
   private onSelectRowSubscription: Subscription;
   private onDeselectRowSubscription: Subscription;
@@ -112,20 +267,20 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     if (this.debug) {
-      //We can add here needed data like version (from package.json) or some other needed things. But it can produce problems in compiling.
-      //TODO - add version from lib.package.json
+      // We can add here needed data like version (from package.json) or some other needed things. But it can produce problems in compiling.
+      // TODO - add version from lib.package.json
       console.log('NG2-SmartTable');
     }
   }
 
-  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+  ngOnChanges(changes: { [propertyName: string]: SimpleChange }): void {
     if (this.grid) {
-      if (changes['settings']) {
+      if (changes.settings) {
         this.grid.setSettings(this.prepareSettings());
       }
-      if (changes['source']) {
-        this.source = this.prepareSource();
-        this.grid.setSource(this.source);
+      if (changes.source) {
+        this.dataSource = this.prepareSource();
+        this.grid.setSource(this.dataSource);
       }
     } else {
       this.initGrid();
@@ -143,6 +298,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     this.destroyed$.next();
   }
 
+  // noinspection JSUnusedGlobalSymbols
   selectRow(index: number, switchPageToSelectedRowPage: boolean = this.grid.getSetting('switchPageToSelectedRowPage')): void {
     if (!this.grid) {
       return;
@@ -155,8 +311,8 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     if (switchPageToSelectedRowPage) {
-      const source: DataSource = this.source;
-      const paging: { page: number, perPage: number } = source.getPaging();
+      const source: DataSource<T> = this.dataSource;
+      const paging: PagingConfiguration = source.getPaging();
       const page: number = getPageForRowIndex(index, paging.perPage);
       index = index % paging.perPage;
       this.grid.settings.selectedRowIndex = index;
@@ -168,7 +324,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
 
     }
 
-    const row: Row = this.grid.getRows()[index];
+    const row: Row<T> = this.grid.getRows()[index];
     if (row) {
       this.onSelectRow(row);
     } else {
@@ -182,7 +338,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     this.emitDeselectRow(null);
   }
 
-  editRowSelect(row: Row) {
+  editRowSelect(row: Row<T>) {
     if (this.grid.getSetting('selectMode') === 'multi') {
       this.onMultipleSelectRow(row);
     } else {
@@ -190,7 +346,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onUserSelectRow(row: Row) {
+  onUserSelectRow(row: Row<T>) {
     if (this.grid.getSetting('selectMode') === 'multi') {
       this.grid.getSelectedRows().filter(other => other !== row && other.isSelected).forEach(other => {
         other.isSelected = false;
@@ -205,11 +361,11 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  onRowHover(row: Row) {
+  onRowHover(row: Row<T>) {
     this.rowHover.emit(row);
   }
 
-  multipleSelectRow(row: Row) {
+  multipleSelectRow(row: Row<T>) {
     const initialAllSelected = this.isAllSelected;
     this.isAllSelected =
       this.grid.getSelectedRows().length === this.grid.getRows().length - 1 &&
@@ -222,7 +378,7 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     this.emitSelectRow(row);
   }
 
-  onSelectAllRows($event: any) {
+  onSelectAllRows(): void {
     this.isAllSelected = !this.isAllSelected;
     this.grid.selectAllRows(this.isAllSelected);
 
@@ -230,24 +386,24 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     this.emitSelectRow(null);
   }
 
-  onSelectRow(row: Row) {
+  onSelectRow(row: Row<T>) {
     this.grid.selectRow(row);
     this.emitSelectRow(row);
   }
 
-  onMultipleSelectRow(row: Row) {
+  onMultipleSelectRow(row: Row<T>) {
     this.emitSelectRow(row);
   }
 
-  initGrid() {
-    this.source = this.prepareSource();
-    this.grid = new Grid(this.source, this.prepareSettings());
+  initGrid(): void {
+    this.dataSource = this.prepareSource();
+    this.grid = new Grid(this.dataSource, this.prepareSettings());
 
     this.subscribeToOnSelectRow();
     this.subscribeToOnDeselectRow();
   }
 
-  prepareSource(): DataSource {
+  prepareSource(): DataSource<T> {
     if (this.source instanceof DataSource) {
       return this.source;
     } else if (this.source instanceof Array) {
@@ -257,42 +413,42 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     return new LocalDataSource();
   }
 
-  prepareSettings(): Object {
+  prepareSettings(): SmartTableNg2Setting<T> {
     return deepExtend({}, this.defaultSettings, this.settings);
   }
 
-  changePage($event: any) {
+  changePage(pageNumber: {page: number}): void {
     this.resetAllSelector();
   }
 
-  sort($event: any) {
+  sort(): void {
     // this.resetAllSelector();
   }
 
-  filter($event: any) {
+  filter($event: any): void {
     this.resetAllSelector();
   }
 
-  private resetAllSelector() {
+  private resetAllSelector(): void {
     this.isAllSelected = false;
   }
 
-  private emitUserSelectRow(row: Row) {
+  private emitUserSelectRow(row: Row<T>): void {
     const selectedRows = this.grid.getSelectedRows();
 
     this.userRowSelect.emit({
       data: row ? row.getData() : null,
       isSelected: row ? row.getIsSelected() : null,
-      source: this.source,
-      selected: selectedRows && selectedRows.length ? selectedRows.map((r: Row) => r.getData()) : [],
+      source: this.dataSource,
+      selected: selectedRows && selectedRows.length ? selectedRows.map((r: Row<T>) => r.getData()) : [],
     });
   }
 
-  private emitSelectRow(row: Row) {
+  private emitSelectRow(row: Row<T>): void {
     const data = {
       data: row ? row.getData() : null,
       isSelected: row ? row.getIsSelected() : null,
-      source: this.source,
+      source: this.dataSource,
     };
     this.rowSelect.emit(data);
     if (!row?.isSelected) {
@@ -300,16 +456,16 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private emitDeselectRow(row: Row): void {
+  private emitDeselectRow(row: Row<T>): void {
     this.rowDeselect.emit({
       data: row ? row.getData() : null,
       isSelected: row ? row.getIsSelected() : null,
-      source: this.source,
+      source: this.dataSource,
     });
   }
 
   private isIndexOutOfRange(index: number): boolean {
-    const dataAmount: number = this.source?.count();
+    const dataAmount: number = this.dataSource?.count();
     return index < 0 || (typeof dataAmount === 'number' && index >= dataAmount);
   }
 
@@ -334,5 +490,4 @@ export class Ng2SmartTableComponent implements OnInit, OnChanges, OnDestroy {
         this.emitDeselectRow(row);
       });
   }
-
 }

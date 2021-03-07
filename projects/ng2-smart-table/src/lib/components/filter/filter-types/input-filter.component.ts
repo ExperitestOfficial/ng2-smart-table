@@ -1,8 +1,8 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
+import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 
-import { DefaultFilter } from './default-filter';
+import {DefaultFilter} from './default-filter';
 
 @Component({
   selector: 'input-filter',
@@ -15,7 +15,7 @@ import { DefaultFilter } from './default-filter';
       placeholder="{{ column.title }}"/>
   `,
 })
-export class InputFilterComponent extends DefaultFilter implements OnInit, OnChanges {
+export class InputFilterComponent<T extends object> extends DefaultFilter<T> implements OnInit, OnChanges {
 
   inputControl = new FormControl();
 
@@ -32,7 +32,7 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
         distinctUntilChanged(),
         debounceTime(this.delay),
       )
-      .subscribe((value: string) => {
+      .subscribe(() => {
         this.query = this.inputControl.value;
         this.setFilter();
       });

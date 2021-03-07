@@ -1,16 +1,16 @@
 import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 
-import { Grid } from '../../../lib/grid';
-import { DataSource } from '../../../lib/data-source/data-source';
-import { Column } from "../../../lib/data-set/column";
+import {Grid} from '../../../lib/grid';
+import {DataSource} from '../../../lib/data-source/data-source';
+import {Column} from '../../../lib/data-set/column';
 
 @Component({
   selector: '[ng2-st-thead-filters-row]',
   template: `
     <th *ngIf="isMultiSelectVisible"></th>
     <th ng2-st-add-button *ngIf="showActionColumnLeft"
-                          [grid]="grid"
-                          (create)="create.emit($event)">
+        [grid]="grid"
+        (create)="create.emit($event)">
     </th>
     <th *ngFor="let column of getVisibleColumns(grid.getColumns())" class="ng2-smart-th {{ column.id }}">
       <ng2-smart-table-filter [source]="source"
@@ -20,18 +20,18 @@ import { Column } from "../../../lib/data-set/column";
       </ng2-smart-table-filter>
     </th>
     <th ng2-st-add-button *ngIf="showActionColumnRight"
-                          [grid]="grid"
-                          [source]="source"
-                          (create)="create.emit($event)">
+        [grid]="grid"
+        [source]="source"
+        (create)="create.emit($event)">
     </th>
   `,
 })
-export class TheadFitlersRowComponent implements OnChanges {
+export class TheadFitlersRowComponent<T extends object> implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() source: DataSource;
+  @Input() grid: Grid<T>;
+  @Input() source: DataSource<T>;
 
-  @Output() create = new EventEmitter<any>();
+  @Output() create = new EventEmitter<{source: DataSource<T>}>();
   @Output() filter = new EventEmitter<any>();
 
   isMultiSelectVisible: boolean;
@@ -46,7 +46,7 @@ export class TheadFitlersRowComponent implements OnChanges {
     this.filterInputClass = this.grid.getSetting('filter.inputClass');
   }
 
-  getVisibleColumns(columns: Array<Column>): Array<Column> {
-    return (columns || []).filter((column: Column) => !column.hide);
+  getVisibleColumns(columns: Array<Column<T, unknown, keyof T>>): Array<Column<T, unknown, keyof T>> {
+    return (columns || []).filter((column: Column<T, unknown, keyof T>) => !column.hide);
   }
 }

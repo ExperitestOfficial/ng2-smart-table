@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrategy} from '@angular/core';
 
-import {Grid} from '../../../lib/grid';
+import {ConfirmResponse, Grid} from '../../../lib/grid';
 import {Row} from '../../../lib/data-set/row';
 import {DataSource} from '../../../lib/data-source/data-source';
 
@@ -14,24 +14,24 @@ import {DataSource} from '../../../lib/data-source/data-source';
     </div>
   `
 })
-export class TbodyEditDeleteComponent implements OnChanges {
+export class TbodyEditDeleteComponent<T extends object> implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() row: Row;
-  @Input() source: DataSource;
-  @Input() deleteConfirm: EventEmitter<any>;
-  @Input() editConfirm: EventEmitter<any>;
+  @Input() grid: Grid<T>;
+  @Input() row: Row<T>;
+  @Input() source: DataSource<T>;
+  @Input() deleteConfirm: EventEmitter<ConfirmResponse<T>>;
+  @Input() editConfirm: EventEmitter<unknown>;
 
-  @Output() edit = new EventEmitter<any>();
-  @Output() delete = new EventEmitter<any>();
-  @Output() editRowSelect = new EventEmitter<any>();
+  @Output() edit = new EventEmitter<{data: T, source: DataSource<T>}>();
+  @Output() delete = new EventEmitter<{data: T, source: DataSource<T>}>();
+  @Output() editRowSelect = new EventEmitter<Row<T>>();
 
   isActionEdit: boolean;
   isActionDelete: boolean;
   editRowButtonContent: string;
   deleteRowButtonContent: string;
 
-  onEdit(event: any) {
+  onEdit(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
 
@@ -47,7 +47,7 @@ export class TbodyEditDeleteComponent implements OnChanges {
     }
   }
 
-  onDelete(event: any) {
+  onDelete(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
 
@@ -61,7 +61,7 @@ export class TbodyEditDeleteComponent implements OnChanges {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.isActionEdit = this.grid.getSetting('actions.edit');
     this.isActionDelete = this.grid.getSetting('actions.delete');
     this.editRowButtonContent = this.grid.getSetting('edit.editButtonContent');

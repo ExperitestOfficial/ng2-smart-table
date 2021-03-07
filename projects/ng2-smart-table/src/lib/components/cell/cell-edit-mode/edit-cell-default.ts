@@ -5,10 +5,10 @@ import { Cell } from '../../../lib/data-set/cell';
 @Component({
   template: ''
 })
-export class EditCellDefault {
+export class EditCellDefault<T extends object, C, D extends keyof T> {
 
-  @Input() cell: Cell;
-  @Input() inputClass: string = '';
+  @Input() cell: Cell<T, C, D>;
+  @Input() inputClass = '';
 
   @Output() edited = new EventEmitter<any>();
 

@@ -8,8 +8,8 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { Cell } from '../../../lib/data-set/cell';
-import { ViewCell } from './view-cell';
+import {Cell} from '../../../lib/data-set/cell';
+import {ViewCell} from './view-cell';
 
 @Component({
   selector: 'custom-view-component',
@@ -17,11 +17,11 @@ import { ViewCell } from './view-cell';
     <ng-template #dynamicTarget></ng-template>
   `,
 })
-export class CustomViewComponent implements OnInit, OnDestroy {
+export class CustomViewComponent<T extends object> implements OnInit, OnDestroy {
 
   customComponent: any;
-  @Input() cell: Cell;
-  @ViewChild('dynamicTarget', { read: ViewContainerRef, static: true }) dynamicTarget: any;
+  @Input() cell: Cell<T, unknown, keyof T>;
+  @ViewChild('dynamicTarget', {read: ViewContainerRef, static: true}) dynamicTarget: any;
 
   constructor(private resolver: ComponentFactoryResolver) {
   }
@@ -47,7 +47,9 @@ export class CustomViewComponent implements OnInit, OnDestroy {
 
   protected callOnComponentInit() {
     const onComponentInitFunction = this.cell.getColumn().getOnComponentInitFunction();
-    onComponentInitFunction && onComponentInitFunction(this.customComponent.instance);
+    if (onComponentInitFunction) {
+      onComponentInitFunction(this.customComponent.instance);
+    }
   }
 
   protected patchInstance() {
@@ -58,6 +60,6 @@ export class CustomViewComponent implements OnInit, OnDestroy {
     return {
       value: this.cell.getValue(),
       rowData: this.cell.getRow().getData()
-    }
+    };
   }
 }

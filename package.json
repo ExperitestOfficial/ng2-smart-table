@@ -29,7 +29,7 @@
     "@angular/router": "~10.2.0",
     "highlight.js": "^9.15.8",
     "lodash": "^4.17.10",
-    "ng2-completer": "^9.0.1",
+    "ng2-completer": "file:./ng2-completer-20.11.0.tgz",
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"

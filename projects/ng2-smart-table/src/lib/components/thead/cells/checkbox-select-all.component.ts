@@ -9,9 +9,9 @@ import { DataSource } from '../../../lib/data-source/data-source';
     <input type="checkbox" [ngModel]="isAllSelected">
   `,
 })
-export class CheckboxSelectAllComponent {
+export class CheckboxSelectAllComponent<T extends object> {
 
-  @Input() grid: Grid;
-  @Input() source: DataSource;
+  @Input() grid: Grid<T>;
+  @Input() source: DataSource<T>;
   @Input() isAllSelected: boolean;
 }

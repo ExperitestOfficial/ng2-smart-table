@@ -1,49 +1,50 @@
-import { Row } from './row';
-import { Column } from './column';
+import {Row} from './row';
+import {Column} from './column';
+import {SmartTableNgColumns} from '../../ng2-smart-table.component';
 
-export class DataSet {
+export class DataSet<T extends object> {
 
-  newRow: Row;
+  newRow: Row<Partial<T>>;
 
-  protected data: Array<any> = [];
-  protected columns: Array<Column> = [];
-  protected rows: Array<Row> = [];
-  protected selectedRow: Row;
+  protected data: Array<T> = [];
+  protected columns: Column<T, unknown, keyof T>[] = [];
+  protected rows: Array<Row<T>> = [];
+  protected selectedRow: Row<T>;
   protected willSelect: string;
 
-  constructor(data: Array<any> = [], protected columnSettings: Object) {
+  constructor(data: T[] = [], protected columnSettings: SmartTableNgColumns<T>) {
     this.createColumns(columnSettings);
     this.setData(data);
 
     this.createNewRow();
   }
 
-  setData(data: Array<any>) {
+  setData(data: Array<T>) {
     this.data = data;
     this.createRows();
   }
 
-  getColumns(): Array<Column> {
+  getColumns(): Array<Column<T, unknown, keyof T>> {
     return this.columns;
   }
 
-  getRows(): Array<Row> {
+  getRows(): Array<Row<T>> {
     return this.rows;
   }
 
-  getFirstRow(): Row {
+  getFirstRow(): Row<T> {
     return this.rows[0];
   }
 
-  getLastRow(): Row {
+  getLastRow(): Row<T> {
     return this.rows[this.rows.length - 1];
   }
 
-  findRowByData(data: any): Row {
-    return this.rows.find((row: Row) => row.getData() === data);
+  findRowByData(data: T): Row<T> {
+    return this.rows.find((row: Row<T>) => row.getData() === data);
   }
 
-  deselectAll() {
+  deselectAll(): void {
     this.rows.forEach((row) => {
       row.isSelected = false;
     });
@@ -51,7 +52,7 @@ export class DataSet {
     this.selectedRow = undefined;
   }
 
-  selectRow(row: Row): Row | undefined {
+  selectRow(row: Row<T>): Row<T> | undefined {
     const previousIsSelected = row.isSelected;
     this.deselectAll();
 
@@ -61,14 +62,14 @@ export class DataSet {
     return this.selectedRow;
   }
 
-  multipleSelectRow(row: Row): Row {
+  multipleSelectRow(row: Row<T>): Row<T> {
     row.isSelected = !row.isSelected;
     this.selectedRow = row;
 
     return this.selectedRow;
   }
 
-  selectPreviousRow(): Row {
+  selectPreviousRow(): Row<T> {
     if (this.rows.length > 0) {
       let index = this.selectedRow ? this.selectedRow.index : 0;
       if (index > this.rows.length - 1) {
@@ -79,21 +80,21 @@ export class DataSet {
     }
   }
 
-  selectFirstRow(): Row | undefined {
+  selectFirstRow(): Row<T> | undefined {
     if (this.rows.length > 0) {
       this.selectRow(this.rows[0]);
       return this.selectedRow;
     }
   }
 
-  selectLastRow(): Row | undefined {
+  selectLastRow(): Row<T> | undefined {
     if (this.rows.length > 0) {
       this.selectRow(this.rows[this.rows.length - 1]);
       return this.selectedRow;
     }
   }
 
-  selectRowByIndex(index: number): Row | undefined {
+  selectRowByIndex(index: number): Row<T> | undefined {
     const rowsLength: number = this.rows.length;
     if (rowsLength === 0) {
       return;
@@ -110,15 +111,15 @@ export class DataSet {
     this.deselectAll();
   }
 
-  willSelectFirstRow() {
+  willSelectFirstRow(): void {
     this.willSelect = 'first';
   }
 
-  willSelectLastRow() {
+  willSelectLastRow(): void {
     this.willSelect = 'last';
   }
 
-  select(selectedRowIndex?: number): Row | undefined {
+  select(selectedRowIndex?: number): Row<T> | undefined {
     if (this.getRows().length === 0) {
       return;
     }
@@ -137,8 +138,9 @@ export class DataSet {
     return this.selectedRow;
   }
 
-  createNewRow() {
-    this.newRow = new Row(-1, {}, this);
+  createNewRow(): void {
+    // TODO this conversion might cause issues. need to re-evaluate
+    this.newRow = new Row<Partial<T>>(-1, {}, this as unknown as DataSet<Partial<T>>);
     this.newRow.isInEditing = true;
   }
 
@@ -147,7 +149,7 @@ export class DataSet {
    * @param settings
    * @private
    */
-  createColumns(settings: any) {
+  createColumns(settings: SmartTableNgColumns<T>): void {
     for (const id in settings) {
       if (settings.hasOwnProperty(id)) {
         this.columns.push(new Column(id, settings[id], this));
@@ -159,7 +161,7 @@ export class DataSet {
    * Create rows based on current data prepared in data source
    * @private
    */
-  createRows() {
+  createRows(): void {
     this.rows = [];
     this.data.forEach((el, index) => {
       this.rows.push(new Row(index, el, this));
